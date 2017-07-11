@@ -19,10 +19,4 @@ any purchases or cash payments in the current business period, no record for thi
 
 <p>In a "log" file, IDs of non-matching transactions with "oldmast" file have been stored.</p>
 <img src="http://i63.tinypic.com/2upsnyo.png" alt="log_file_content"/>
-
-<p>There is alot future work posibilities, for example:
-<ul>
-<li>Copy new data from file "newmast" to "oldmast" or delete and rename it,</li>
-<li>Read log file output to create new master input - create missing accounts,</li>
-<li>Write an analytics application to calculate ratings between income and outcome.</li>
-</ul></p>
+</p>
