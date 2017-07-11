@@ -12,7 +12,6 @@ any purchases or cash payments in the current business period, no record for thi
 
 <p>When the data is generated or written to a file we can use that data to combine and store it to a new file:</p>
 <img src="http://i66.tinypic.com/2md46yr.png" alt="match_files"/>
-<p>In this example its assumed that negative transactions are purchases and positive transactions are payments.</p>
 
 <p>After program finishes its work: files have been read("oldmast" and "intrans") and files have been combined into one file named "newmast". Also, a "log" file has been created.</p>
 <img src="http://i63.tinypic.com/2ex0wzm.png" alt="files_created"/>
