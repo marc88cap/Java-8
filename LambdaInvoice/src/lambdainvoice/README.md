@@ -11,4 +11,4 @@
 </ol>
 
 <p>OUTPUT:</p>
-<img alt="terminal output" src="Screenshot_2017-07-31_11-44-35"/>
+<img alt="terminal output" src="https://github.com/marc88cap/Java-8/blob/master/LambdaInvoice/src/lambdainvoice/Screenshot_2017-07-31_11-44-35.png?raw=true"/>
