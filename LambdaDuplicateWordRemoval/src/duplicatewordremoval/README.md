@@ -3,12 +3,13 @@
 
 <p>In this example I demonstrate data manipulation using lambdas and streams.</p>
 <ol>
-<li>Sort Invoice objects by PartDescription</li>
-<li>Sort Invoice object by Price</li>
-<li>Map each Invoice to its PartDescription and Quantity, sort results by Quantity</li>
-<li>Map each Invoice to its PartDescription and value of the Invoice (Quantity*Price), sort by value</li>
-<li>Map each Invoice to its PartDescription and value of the Invoice (Quantity*Price) in range from 200 to 500, sort by value</li>
+<li>Remove punctuation</li>
+<li>Split on whitespace</li>
+<li>Remove duplicates</li>
+<li>Do case insensitive sorting</li>
+<li>Display altered data</li>
 </ol>
+
 
 <p>OUTPUT:</p>
 <img alt="terminal output" src="https://raw.githubusercontent.com/marc88cap/Java-8/master/LambdaDuplicateWordRemoval/src/duplicatewordremoval/Screenshot_2017-07-31_17-02-01.png"/>
