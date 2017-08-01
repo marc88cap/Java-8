@@ -25,9 +25,10 @@ public class DuplicateWordRemoval {
         Scanner sc = new Scanner(System.in);
         System.out.printf("%s %n> ", "Input a sentance");
         
-        List<String> input = Arrays.asList(sc.nextLine().replaceAll("\\p{P}","").split("\\s"));
+        List<String> input = Arrays.asList(sc.nextLine().split("\\s"));
         
         input.stream()
+                .map(word -> word.replaceAll("\\p{P}",""))
                 .distinct()
                 .sorted(Comparator.comparing(s -> s.toString(),String.CASE_INSENSITIVE_ORDER))
                 .forEach(s-> System.out.printf("%s%n",s.toString()));
