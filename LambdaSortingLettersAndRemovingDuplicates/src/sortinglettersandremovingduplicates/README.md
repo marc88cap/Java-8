@@ -3,6 +3,7 @@
 
 <p>In this example I demonstrate data manipulation using lambdas and streams.</p>
 <ol>
+<li>Generating 30 random letters [a-z]</li>
 <li>Sorting in ascending order</li>
 <li>Sorting in descending order</li>
 <li>Sorting in ascending order without duplicates</li>
