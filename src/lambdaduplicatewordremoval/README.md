@@ -12,4 +12,4 @@
 
 
 <p>OUTPUT:</p>
-<img alt="terminal output" src="https://raw.githubusercontent.com/marc88cap/Java-8/master/LambdaDuplicateWordRemoval/src/duplicatewordremoval/Screenshot_2017-07-31_17-02-01.png"/>
+<img alt="terminal output" src="Screenshot_2017-07-31_17-02-01.png"/>
