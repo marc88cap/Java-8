@@ -10,4 +10,4 @@
 </ol>
 
 <p>OUTPUT:</p>
-<img alt="terminal output" src="https://raw.githubusercontent.com/marc88cap/Java-8/master/LambdaSortingLettersAndRemovingDuplicates/src/sortinglettersandremovingduplicates/Screenshot_2017-07-31_16-58-59.png"/>
+<img alt="terminal output" src="Screenshot_2017-07-31_16-58-59.png"/>
