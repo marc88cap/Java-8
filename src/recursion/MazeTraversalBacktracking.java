@@ -313,7 +313,7 @@ public class MazeTraversalBacktracking {
     }
     /*
     * this function returns true if maze has at 
-    * least 40% of fields converted to corridors
+    * less than 40% of fields converted to corridors
     */
     private boolean reGenMaze(){
         int count = 0;
