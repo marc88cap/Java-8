@@ -5,12 +5,12 @@
 <ol>
 <li><a title="Power of X" href="Power.java">Power of X</a>: First argument raised to the power of second argument</li>
 <li><a title="Palindromes" href="Palindrome.java">Palindromes:</a> Is the string a palindrome? Ignores case, white space and punctation.</li>
-<li><a title="Eight Queens " href="EightQueens.java">Eight Queens:</a> Can eight queens be placed into a 8x8 field?</li>
-<li><a title="Print an array" href="PrintAnArray.java">Print an array:</a> Prints minimum value of integer array, string input as-is and reversed string input</li>
+<li><a title="Eight Queens " href="EightQueens.java">Eight Queens:</a> Can eight queens be placed into a 8x8 field without attacking each other?</li>
+<li><a title="Print an array" href="PrintAnArray.java">Print an array:</a> Prints integer array as-is, minimum value of integer array, and reversed string input</li>
 </ol>
 <h3><a title="Maze Traversal with Recursive Backtracking" href="MazeMain.java">MazeMain.java</a></h3>
 <ul>
-<li><a title="Maze Traversal with Recursive Backtracking" href="MazeTraversalBacktracking.java">Maze Traversal with Recursive Backtracking</a>: Maze generation at runtime with solution</li>
+<li><a title="Maze Traversal with Recursive Backtracking" href="MazeTraversalBacktracking.java">Maze Traversal with Recursive Backtracking</a>: Maze generator with solution</li>
 </ul>
 <h2>Demonstrational images</h2>
 <p>File Recursion.java:<br /><img alt="terminal output" src="images/Screenshot from 2017-08-17 10-53-23.png"/><br />Output is self-explanatory</p>
