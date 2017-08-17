@@ -34,5 +34,5 @@ For now known issues:
 <li>It would be better if it would not run into a blind corridor which is smaller than 3 in-a-row fields.</li>
 </ul>
 <br />
-<img alt="Example of non-diagonal maze" src="images/Screenshot from 2017-08-17 12-17-12.png"/><br />Example of a maze with only horizontal and vertical corridors
+<img alt="Example of non-diagonal maze" src="images/Screenshot from 2017-08-17 12-17-12.png"/>Example of a maze with only horizontal and vertical corridors
 </p>
