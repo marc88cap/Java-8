@@ -7,7 +7,6 @@
 <li><a title="Palindromes" href="Palindrome.java">Palindromes:</a> Is the string a palindrome? Ignores case, white space and punctation.</li>
 <li><a title="Eight Queens " href="EightQueens.java">Eight Queens:</a> Can eight queens be placed into a 8x8 field?</li>
 <li><a title="Print an array" href="PrintAnArray.java">Print an array:</a> Prints minimum value of integer array, string input as-is and reversed string input</li>
-<li></li>
 </ol>
 <h3><a title="Maze Traversal with Recursive Backtracking" href="MazeMain.java">MazeMain.java</a></h3>
 <ul>
@@ -19,10 +18,10 @@
 <img alt="terminal output 12x12 maze" src="src/recursion/images/Screenshot from 2017-08-17 10-48-40.png"/><img alt="terminal output 12x12 maze" src="images/Screenshot from 2017-08-17 10-48-50.png"/><br /><br />
 LEGEND:
 <ol>
-<li># represents a Wall</li>
-<li>Empty field represents a Corridor</li>
-<li>+ represents a active path</li>
-<li>- represents a backtracked path</li>
+<li><b>#</b> represents a Wall</li>
+<li><b>Empty field</b> represents a Corridor</li>
+<li><b>+</b> represents a active path</li>
+<li><b>-</b> represents a backtracked path</li>
 </ol></p>
 
 <h3>Future work</h3>
@@ -35,5 +34,5 @@ For now known issues:
 <li>It would be better if it would not run into a blind corridor which is smaller than 3 in-a-row fields.</li>
 </ul>
 <br />
-<img alt="Example of non-diagonal maze" src="src/recursion/images/Screenshot from 2017-08-17 12-17-12.png"/><br />Example of a maze with only horizontal and vertical corridors
+<img alt="Example of non-diagonal maze" src="images/Screenshot from 2017-08-17 12-17-12.png"/><br />Example of a maze with only horizontal and vertical corridors
 </p>
