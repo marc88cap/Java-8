@@ -1,4 +1,4 @@
-<h2>This folder contains packages or applications and are not dependent of each other.</h2>
+<h2>This folder contains packages or applications that are not dependent of each other.</h2>
 <p>
 Packages:
 <ul>
