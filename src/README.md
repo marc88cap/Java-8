@@ -9,6 +9,6 @@ Packages:
 <li><a href="lambdainvoice">Sorting invoice using lambda</a> - displays different sorting possibilities</li>
 <li><a href="lambdasortinglettersandremovingduplicates">Lambda exercise</a> - Generating, sorting letters and removing their duplicates</li>
 <li><a href="recursion">Recursion</a> - method power (x^N), palindrome detection, eight queens, array manipulation and maze traversial with recursive backtracking</li>
-<li><a href="textanalysis">Text Analysis application</a> - displays count of same characters, same words and same length words</li>
+<li><a href="textanalysis">Text Analysis application</a> - displays count of the same characters, the same words and the same length words of string input</li>
 </ul>
 </p>
