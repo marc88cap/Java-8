@@ -13,7 +13,7 @@
 <li><a title="Maze Traversal with Recursive Backtracking" href="MazeTraversalBacktracking.java">Maze Traversal with Recursive Backtracking</a>: Maze generation at runtime with solution</li>
 </ul>
 <h2>Demonstrational images</h2>
-<p>File Recursion.java:<br /><img alt="terminal output" src="images/Screenshot from 2017-08-17 10-53-23.jpg"/><br />Output is self-explanatory</p>
+<p>File Recursion.java:<br /><img alt="terminal output" src="images/Screenshot from 2017-08-17 10-53-23.png"/><br />Output is self-explanatory</p>
 <p>File MazeMain.java:<br /><img alt="terminal output 7x7 maze" src="images/MazeSolving.gif"/><br />
 <img alt="terminal output 12x12 maze" src="images/Screenshot from 2017-08-17 10-48-40.png"/><img alt="terminal output 12x12 maze" src="images/Screenshot from 2017-08-17 10-48-50.png"/><br /><br />
 LEGEND:
