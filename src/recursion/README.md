@@ -14,9 +14,9 @@
 <li><a title="Maze Traversal with Recursive Backtracking" href="MazeTraversalBacktracking.java">Maze Traversal with Recursive Backtracking</a>: Maze generation at runtime with solution</li>
 </ul>
 <h2>Demonstrational images</h2>
-<p>File Recursion.java:<br /><img alt="terminal output" src="/images/Screenshot from 2017-08-17 10-53-23.jpg"/><br />Output is self-explanatory</p>
-<p>File MazeMain.java:<br /><img alt="terminal output 7x7 maze" src="/images/MazeSolving.png"/><br />
-<img alt="terminal output 12x12 maze" src="/images/Screenshot from 2017-08-17 10-48-40.png"/><img alt="terminal output 12x12 maze" src="/images/Screenshot from 2017-08-17 10-48-50.png"/><br /><br />
+<p>File Recursion.java:<br /><img alt="terminal output" src="images/Screenshot from 2017-08-17 10-53-23.jpg"/><br />Output is self-explanatory</p>
+<p>File MazeMain.java:<br /><img alt="terminal output 7x7 maze" src="images/MazeSolving.png"/><br />
+<img alt="terminal output 12x12 maze" src="src/recursion/images/Screenshot from 2017-08-17 10-48-40.png"/><img alt="terminal output 12x12 maze" src="images/Screenshot from 2017-08-17 10-48-50.png"/><br /><br />
 LEGEND:
 <ol>
 <li># represents a Wall</li>
@@ -35,5 +35,5 @@ For now known issues:
 <li>It would be better if it would not run into a blind corridor which is smaller than 3 in-a-row fields.</li>
 </ul>
 <br />
-<img alt="Example of non-diagonal maze" src="images/Screenshot from 2017-08-17 12-17-12.png"/><br />Example of a maze with only horizontal and vertical corridors
+<img alt="Example of non-diagonal maze" src="src/recursion/images/Screenshot from 2017-08-17 12-17-12.png"/><br />Example of a maze with only horizontal and vertical corridors
 </p>
