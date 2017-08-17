@@ -106,39 +106,13 @@ public class MazeTraversalBacktracking {
     * Display the map, indicator argument determines if S and E are displayed
     */
     public void displayMap(boolean indicators){
-//        System.out.println("row: "+this.startY+", column: "+this.startX);
-//        
-//        System.out.print("   |");
-//        for(int i=0; i<map[0].length; i++){
-//            System.out.printf("%2d",i);
-//        }
-//        System.out.println();
-//        
-//        for(int i=0;i<map[0].length;i++){
-//            System.out.print("--");
-//        }
-//        System.out.println("----");
-//        
-//        
         for(int y=0;y<map.length;y++){
-//            System.out.printf("%2d |", y);
             for(int x=0;x<map[0].length;x++){
                 System.out.printf("%2s",(startY==y && startX==x && indicators)? "S" : (endY==y && endX==x && indicators)? "E" : map[y][x]);
             }
             System.out.printf("%n");
         }
-//        
-//        for(int i=0;i<map[0].length;i++){
-//            System.out.print("--");
-//        }
-//        System.out.println("----");
-//        System.out.print("   |");
-//        for(int i=0; i<map[0].length; i++){
-//            System.out.printf("%2d",i);
-//        }
         System.out.println();
-//        
-//        
     }
     
     public void mazeGenerator(int Y, int X){
@@ -312,7 +286,7 @@ public class MazeTraversalBacktracking {
         else if (x==map[0].length-2){endY=y;endX=x+1;}
     }
     /*
-    * this function returns true if maze has at 
+    * this function returns true if maze has
     * less than 40% of fields converted to corridors
     */
     private boolean reGenMaze(){
