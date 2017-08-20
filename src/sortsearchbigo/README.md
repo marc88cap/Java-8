@@ -1,6 +1,6 @@
 # Sorting, searching and Big O Notation
 ## What is Big O Notation?
-Big O Notation describes how hard an algorithm has to work to solve a problem. Ratio between data to process and time.
+Big O Notation describes how hard an algorithm has to work to solve a problem.
 
 ## Sorting and searching Algorithms
 
