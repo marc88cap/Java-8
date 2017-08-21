@@ -4,9 +4,9 @@ Big O Notation describes how hard an algorithm has to work to solve a problem.
 
 ## Sorting and searching Algorithms
 
-[Bubble sort](BubbleSort.java) uses less memory than bucket sort but needs more time when looping through elements. `O(n^2)` - because it compares each element with each other element.
+[Bubble sort](BubbleSort.java) uses less memory than Bucket sort but needs more time when looping through elements. `O(n^2)` - because it compares each element with each other element.
 
-[Bucket sort](BucketSort.java) uses more memory than bubble sort because its storing values into 10 separate buckets which are the same length as original array. 
+[Bucket sort](BucketSort.java) uses more memory than Bubble sort because its storing values into 10 separate buckets which are the same length as original array. 
 After each pass all elements are stored back to the original array in a new order, this process repeats for times of the digit count of the longest number. 
 `O(n*k)` where `k` is count of the digits of longest number and `n` is count of values to be sorted.
 
