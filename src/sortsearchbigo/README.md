@@ -6,7 +6,7 @@ Big O Notation describes how hard an algorithm has to work to solve a problem.
 
 [Bubble sort](BubbleSort.java) uses less memory than bucket sort but needs more time when looping through elements. `O(n^2)` - because it compares each element with each other element.
 
-[Bucket sort](BucketSort.java) uses more memory than bubble sort because its storing values into 10 separate buckets (O(n)) which are the same length as original array, after sorting
+[Bucket sort](BucketSort.java) uses more memory than bubble sort because its storing values into 10 separate buckets which are the same length as original array (O(n)), after sorting
 all elements are stored back to the original array in a new order, this process repeats for as long as all values are stored to the first (0) bucket. That makes this method `O(n)`.
 
 [Quick sort](QuickSort.java) sorts a list by finding its first elements correct position (O(n)) and dividing (O(log n)) that list into two lists, one with smaller 
