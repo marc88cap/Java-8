@@ -14,5 +14,5 @@ values than that elements value and the second with bigger values than the eleme
 This process repeats as long as there is only one element in the list. Which makes this method a Order n log n or `O(n log n)`.
 
 [Recursive Linear Search](RecursiveLinearSearch.java) can be a lot slower than [Recursive Binary Search](RecursiveBinarySearch.java) because its comparing each element with the searched key - `O(n)`.
-While the other is comparing a necessary sorted lists middle value with the searched key - `O(log n)` because if the key is smaller, bigger values than the key are kept and vice versa. 
+While the other is only comparing a necessary sorted lists middle value with the searched key - `O(log n)` because if the key is smaller, bigger values than the key are kept and vice versa. 
 Then the remaining list is recursively searched until a equal value is found or there is nothing left to compare.
