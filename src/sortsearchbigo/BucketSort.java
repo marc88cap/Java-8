@@ -22,7 +22,7 @@ public class BucketSort {
                 int n = Integer.parseInt(String.valueOf((value.length()-d>=0)?value.charAt(value.length()-d):'0'));
                 for(int x=0;x<result[0].length;x++){
                     if(result[n][x]==0){
-                        result[n][x] = Integer.parseInt(value);
+                        result[n][x] = data[i];
                         break;
                     }
                 }
