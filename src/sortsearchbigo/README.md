@@ -8,7 +8,7 @@ Big O Notation describes how hard an algorithm has to work to solve a problem.
 
 [Bucket sort](BucketSort.java) uses more memory than Bubble sort because its storing values into 10 separate buckets which are the same length as original array. 
 After each pass all elements are stored back to the original array in a new order, this process repeats for times of the digit count of the longest number. 
-`O(n*k)` where `k` is count of the digits of longest number and `n` is count of values to be sorted.
+`O(n*k)` where `k` is count of the digits in the longest number and `n` is count of values to be sorted.
 
 [Quick sort](QuickSort.java) sorts a list by finding its first elements correct position (O(n)) and dividing (O(log n)) that list into two lists, one with smaller 
 values than that elements value and the second with bigger values than the element. These lists are then recursively sorted again. 
