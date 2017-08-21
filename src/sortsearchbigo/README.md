@@ -15,4 +15,4 @@ This process repeats as long as there is only one element in the list. Which mak
 
 [Recursive Linear Search](RecursiveLinearSearch.java) can be a lot slower than [Recursive Binary Search](RecursiveBinarySearch.java) because its comparing each element with the searched key - O(n).
 While the other is comparing a necessary sorted list if a value in the middle of a list is bigger, smaller or equal than the searched key - O(log n) because it compares only the middle value with 
-the search key and divides the list in the middle if the comparison fails.
+the search key, if the key is smaller, bigger values than the key are kept and vice versa. The remaining list is recursively searched until a equal value is found or there is nothing left to compare.
