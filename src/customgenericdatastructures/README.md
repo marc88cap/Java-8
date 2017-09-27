@@ -39,7 +39,7 @@ Demonstration of inserting and merging into an ordered list
 ![reverse copy](graphics/ReverseCopy.png)
 
 ## [Search List](SearchList.java)
-Searches a list, outputs the number if found and null if not found.
+Searches a list, outputs `the number` if found and `null` if not found.
 
 ![search list](graphics/SearchList.png)
 
