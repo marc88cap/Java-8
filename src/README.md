@@ -2,6 +2,7 @@
 <p>
 Packages:
 <ul>
+<li><a href="customgenericdatastructures">Custom Generic Data Structures</a> - Custom Queue, Stack, (Indexed)Linked List, Tree</li>
 <li><a href="filematching">File Matching</a> - raw data without its types</li>
 <li><a href="filematchingserialization">File Matching with Serialization</a> - whole objects with data types are stored into a file</a>
 <li><a href="knightstour">Knights Tour Game</a> - with and without closed tour heuristics
