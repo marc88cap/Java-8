@@ -41,7 +41,7 @@ Demonstration of inserting and merging into an ordered list
 ## [Search List](SearchList.java)
 Searches a list, outputs the number if found and null if not found.
 
-![search list](graphics/SearchList.java)
+![search list](graphics/SearchList.png)
 
 ## [Stack Palindrome](StackPalindrome.java)
 Uses a Stack to determine if an input is a palindrome or not.
