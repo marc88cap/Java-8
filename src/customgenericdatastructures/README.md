@@ -7,39 +7,48 @@ Usual direction of the tree is from top to bottom.
 First value in the tree is called root. The second value inserted in the tree is compared to the root (or parent) and if its less than then its stored to roots (or parents) left side otherwise its stored to the right side. This value then becomes a child of the root and a parent to the new possible inputs. 
 
 Graphical demonstration:
-(graphics/binaryTree1300.gif)
+
+![animation: binary tree insertation and deletion](graphics/binaryTree1300.gif)
 
 ## [Binary Tree Of Integers](BinaryTreeOfIntegers.java)
 Binary tree of integers demonstrates the input of integers (first line), its depth, inorder traversal, preorder traversal and postorder traversal.
-(graphics/BinaryTreeOfIntegers.png)
+
+![binary tree of integers](graphics/BinaryTreeOfIntegers.png)
 
 ## [Binary Tree Of Strings](BinaryTreeOfIntegers.java)
 Binary tree of strings is the same demonstration as with integers but with strings.
-(graphics/BinaryTreeOfStrings.png)
+
+![binary tree of strings](graphics/BinaryTreeOfStrings.png)
 
 ## [Indexed List](IndexedList.java)
 Indexed list is a list stored under indexes to provide better performance when searching for a value.
-(graphics/IndexedListTest.png)
+
+![indexed list](graphics/IndexedListTest.png)
 
 ## [Infix To Postfix Converter](InfixToPostfixConverter.java)
 Infix to postfix converter is an application that converts a human readable arithmetic expression into machine-language code using a Stack.
-(graphics/InfixToPostfixConverter.png)
+
+![arithmetic expression: infix to postfix converter](graphics/InfixToPostfixConverter.png)
 
 ## [Insert Into Ordered List](InsertIntoOrderedList.java)
 Demonstration of inserting and merging into an ordered list
-(graphics/InsertIntoOrderedList.png)
+
+![insert into ordered list](graphics/InsertIntoOrderedList.png)
 
 ## [Reverse Copy](ReverseCopy.java)
-(graphics/ReverseCopy.png)
+![reverse copy](graphics/ReverseCopy.png)
 
 ## [Search List](SearchList.java)
 Searches a list, outputs the number if found and null if not found.
-(graphics/SearchList.java)
+
+![search list](graphics/SearchList.java)
 
 ## [Stack Palindrome](StackPalindrome.java)
 Uses a Stack to determine if an input is a palindrome or not.
-(graphics/StackPalindrome.png)
+
+![stack palindrome](graphics/StackPalindrome.png)
 
 ## [Supermarket Simulation](SupermarketSimulation.java)
 Using Queue it simulates a supermarket checkout line with 1-4 min arrival of a new customer and 1-4 min service time of current customer for 720 min or 12 hours.
-(graphics/SupermarketSimulation.png)
+
+![supermarket simulation](graphics/SupermarketSimulation.png)
