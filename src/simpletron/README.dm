@@ -1,7 +1,7 @@
-# Simpletron Machine-Language Programing
-It is a computer that converts instructions into actions, a software based simulation.
+<h1>Simpletron Machine-Language Programing</h1>
+<p>It is a computer that converts instructions into actions, a software based simulation.</p>
 
-First we feed the computer the instructions which lead it to run an application that sums up two numbers.
+<p>First we feed the computer the instructions which lead it to run an application that sums up two numbers.</p>
 <table>
     <th>
         <td>Location</td>
@@ -61,4 +61,4 @@ First we feed the computer the instructions which lead it to run an application 
 </table>
 
 After computation is finished and application is halted it prints or dumps its register and memory to display.
-![Simpletron](graphics/Simpletron.png)
+<img alt="Simpletron" src="graphics/Simpletron.png"/>
