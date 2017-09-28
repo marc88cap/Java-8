@@ -10,7 +10,7 @@ Packages:
 <li><a href="lambdainvoice">Sorting invoice using lambda</a> - displays different sorting possibilities</li>
 <li><a href="lambdasortinglettersandremovingduplicates">Lambda</a> - Generating, sorting letters and removing their duplicates</li>
 <li><a href="recursion">Recursion</a> - method power (x<sup>n</sup>), palindrome detection, eight queens, array manipulation and maze traversial with recursive backtracking</li>
-<li><a href="simpletron">Simpletron</a> - computer simulation to execute Simpletron Machine Language programs</li>
+<li><a href="simpletron">Simpletron</a> - computer simulation to execute Simpletron Machine Language programs </li>
 <li><a href="sortsearchbigo">Big O: Sorting and Searching</a> - Bubble Sort, Bucket Sort, Quick Sort, Recursive Linear Search and Recursive Binary Search</li>
 <li><a href="spellchecker">Spellchecker</a> - input a mistyped word and the application will try to guess the correct one
 <li><a href="textanalysis">Text Analysis</a> - displays count of the same characters, the same words and the same length words of string input</li>
