@@ -1,6 +1,87 @@
 # Simpletron Machine-Language Programing
 It is a computer that converts instructions into actions, a software based simulation.
+## Operation codes
+<table>
+    <th>
+        <td>Operation code</td>
+        <td>Operation</td>
+        <td>Description</td>
+    </th>
+    <tr>
+        <td></td>
+        <td>10</td>
+        <td>READ</td>
+        <td>Read a word from the keyboard into a specific location in memory.</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>11</td>
+        <td>WRITE</td>
+        <td>Write a word from a specific location in memory to the screen.</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>20</td>
+        <td>LOAD</td>
+        <td>Load a word from a specific location in memory into the accumulator.</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>21</td>
+        <td>STORE</td>
+        <td>Store a word from the accumulator into a specific location in memory</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>30</td>
+        <td>ADD</td>
+        <td>Add a word from a specific location in memory to the word in the accumulator (leave the result in the accumulator).</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>31</td>
+        <td>SUBTRACT</td>
+        <td>Subtract a word from a specific location in memory from the word in the accumulator (leave the result in the accumulator).</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>32</td>
+        <td>DIVIDE</td>
+        <td>Divide a word from a specific location in memory into the word in the accumulator (leave result in the accumulator).</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>33</td>
+        <td>MULTIPLY</td>
+        <td>Multiply a word from a specific location in memory by the word in the accumulator (leave the result in the accumulator).</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>40</td>
+        <td>BRANCH</td>
+        <td>Branch to a specific location in memory.</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>41</td>
+        <td>BRANCHNEG</td>
+        <td>Branch to a specific location in memory if the accumulator is negative.</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>42</td>
+        <td>BRANCHZERO</td>
+        <td>Branch to a specific location in memory if the accumulator is zero.</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>43</td>
+        <td>HALT</td>
+        <td>Halt. The program has completed its task.</td>
+    </tr>
+</table>
 
+## Summing up 2 numbers
 First we feed the computer the instructions which lead it to run an application that sums up two numbers.
 <table>
     <th>
