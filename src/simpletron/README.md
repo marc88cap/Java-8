@@ -1,6 +1,48 @@
-# Simpletron Machine-Language Programing
-It is a computer that converts instructions into actions, a software based simulation.
-## Operation codes
+# Simpletron Machine-Language Programming
+An exercise to create a programming language simulator called Simpletron Machine Language or SML.
+The compiler should be written object-oriented.
+## RULES
+There are certain rules that the Simple needs to follow:
+<ul>
+<li>Every <i>statement</i> consists of a <i>line number</i> and a <i>instruction</i>:
+    <ul><li><i>Line numbers</i> must appear in <i>ascending</i> order,</li>
+        <li>Each <i>statement</i> begins with the following <i>commands</i>:
+            <ul>
+                <li><b>rem</b> is a remark that represents a comment and is ignored by the compiler - can be used multiple times,</li>
+                <li><b>input</b> reads a value inputed from the keyboard and save to the following variable - can be used multiple times,</li>
+                <li><b>let</b> declares a variable and sets its value - can be used multiple times,</li>
+                <li><b>print</b> prints variables value - can be used multiple times,</li>
+                <li><b>goto</b> moves to the following line e.g. <i>goto 10' moves to line 10</i> - can be used multiple times,</li>
+                <li><b>if/goto</b> is a conditional expression e.g. <i>if i == 5 goto 10</i> - can be used multiple times,</li>
+                <li><b>end</b> terminates the program, only one <i>end</i> command per code allowed.</li>
+            </ul>
+        </li>
+        <li><i>Arithmetic expressions</i> are allowed to use only following <i>operators</i> and have the same <i>precedence</i> as in <i>Java</i>, however <i>parentheses</i> can be used to change the <i>order of evaluation</i> of the expression:
+            <ul>
+                <li>+</li>
+                <li>-</li>
+                <li>*</li>
+                <li>/</li>
+            </ul>
+        </li>
+        <li>Simple recognizes only <i>lowercase letters</i>,</li>
+        <li>A <i>variable name</i> is a single letter,</li>
+        <li>Simple does not allow string manipulation.</li>
+    </ul>
+</li>
+<li><li>
+</ul>
+## Progress
+Completed:
+<ul>
+<li>Simple programs: programs that are written in Simple language,</li>
+<li>Error checking methods for Simple program files</li>
+</ul>
+Open:
+<ul>
+<li>Compiler: needs to compile Simple code into SML instructions as introduced in <i>Operation codes</i> and <i>Summing up 2 numbers</i></li>
+</ul>
+### Operation codes
 <table>
     <th>
         <td>Operation code</td>
@@ -81,7 +123,7 @@ It is a computer that converts instructions into actions, a software based simul
     </tr>
 </table>
 
-## Summing up 2 numbers
+### Summing up 2 numbers
 First we feed the computer the instructions which lead it to run an application that sums up two numbers.
 <table>
     <th>
