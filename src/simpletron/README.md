@@ -32,7 +32,7 @@ There are certain rules that the Simple needs to follow:
     </li>
 </ul>
 
-## Progress 
+### Progress 
 
 Completed:
 <ul>
