@@ -30,9 +30,9 @@ There are certain rules that the Simple needs to follow:
         <li>Simple does not allow string manipulation.</li>
     </ul>
 </li>
-<li><li>
 </ul>
-## Progress
+## Progress 
+
 Completed:
 <ul>
 <li>Simple programs: programs that are written in Simple language,</li>
