@@ -43,6 +43,7 @@ Open:
 <ul>
 <li>Compiler: needs to compile Simple code into SML instructions as introduced in <i>Operation codes</i> and <i>Summing up 2 numbers</i></li>
 </ul>
+
 ### Operation codes
 <table>
     <th>
