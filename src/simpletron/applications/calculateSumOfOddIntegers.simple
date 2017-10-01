@@ -1,0 +1,9 @@
+10 rem Calculate the sum of odd integers
+15 let s = 0
+20 let n = 2
+25 let g = 30
+30 let s = s + n
+35 let n = n + 2
+40 if n = 30 goto 99
+50 goto 30
+99 end

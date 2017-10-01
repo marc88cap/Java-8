@@ -1,0 +1,9 @@
+10 rem  input tree integers, determine their average and print the result
+20 input a
+30 input b
+40 input c
+43 rem
+45 rem  calculate the average of the tree integers
+50 let r = (a + b + c) / 3
+60 print r
+99 end
