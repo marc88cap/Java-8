@@ -2,7 +2,7 @@
 <p>
 Exposed:
 <ul>
-<li><a href="simpletron">Simpletron</a> - compiler to execute Simpletron Machine Language (SML) programs </li>
+<li><a href="simpletron">Simpletron</a> - compiles Simple code to Simpletron Machine Language (SML)</li>
 </ul>
 </p>
 <p>
