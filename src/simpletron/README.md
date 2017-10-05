@@ -1,5 +1,5 @@
-# Simpletron Machine-Language Programming
-An exercise to create a programming language simulator called Simpletron Machine Language or SML.
+# Compiler simulation
+An exercise to create a compiler which will compile Simple code to Simpletron Machine Language or SML.
 The compiler should be written object-oriented.
 ## RULES
 There are certain rules that the Simple needs to follow:
@@ -39,11 +39,12 @@ Completed:
 <li>Simple programs: programs that are written in Simple language,</li>
 <li>Error checking methods for Simple program files</li>
 </ul>
-Open:
+To do:
 <ul>
 <li>Compiler: needs to compile Simple code into SML instructions as introduced in <i>Operation codes</i> and <i>Summing up 2 numbers</i></li>
 </ul>
-
+# Simpletron Machine Language
+Simulation of how machine executes programs written in SML.
 ### Operation codes
 <table>
     <th>
