@@ -200,4 +200,4 @@ First we feed the computer the instructions which lead it to run an application 
 </table>
 
 After computation is finished and application is halted it prints or dumps its register and memory to display.
-![Simpletron](graphics/Simpletron.png)
+![Simpletron](simpletronhardware/graphics/Simpletron.png)
