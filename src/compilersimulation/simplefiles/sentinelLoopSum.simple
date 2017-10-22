@@ -9,5 +9,5 @@
 50 let s = s + i
 55 rem
 60 rem  get next number
-7s0 goto 30
+70 goto 30
 99 end

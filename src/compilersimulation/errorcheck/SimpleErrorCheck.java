@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package simpletron;
+package compilersimulation.errorcheck;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -16,34 +16,19 @@ import java.util.Scanner;
  *
  * @author markoc
  */
-public class Simple<E> implements Queue<E>{
+public class SimpleErrorCheck<E> implements Queue<E>{
     private InstructionNode<E> firstInstruction;
     private InstructionNode<E> lastInstruction;
     private int size;
     private Path filePath;
     private Scanner fileSimpleCode;
     
-    public Simple(){
+    public SimpleErrorCheck(){
         firstInstruction = lastInstruction = null;
     }
     
-    public Simple(String file){
-        this();
-        filePath = Paths.get(file); // convert file to file path
-        try
-        { 
-            fileSimpleCode = new Scanner(filePath); // read file
-	    this.checkErrors();
-        }
-        catch (IOException e){
-            e.printStackTrace();
-        }
-	catch (Exception e){
-	    e.printStackTrace();
-	}
-    }
     // method checks if the loaded program is written as expected
-    public void checkErrors() throws Exception{
+    public boolean checkErrors() throws Exception{
         int endCounter = 0;
         int lineNum = -1;
         while(fileSimpleCode.hasNext())
@@ -83,9 +68,26 @@ public class Simple<E> implements Queue<E>{
 	    if(part[1].matches("\\b(if)\\b") && checkIf(simpleLine.replaceFirst("^[0-9]+\\sif\\s", "")))
 		throw new Exception("Wrong syntax at line "+part[0]);
         }
-	// green light message
-	System.out.println("File is ready for compilation....");
-	
+	return true;
+    }
+    
+    // set file
+    public String openFile(String filepath){
+        filePath = Paths.get(filepath); // convert file to file path
+        try
+        { 
+            fileSimpleCode = new Scanner(filePath); // read file
+	    this.checkErrors();
+        }
+        catch (IOException e){
+            e.printStackTrace();
+	    System.exit(0);
+        }
+	catch (Exception e){
+	    e.printStackTrace();
+	    System.exit(0);
+	}
+	return filepath;
     }
     
     // check for correct arithmetic order
@@ -95,7 +97,7 @@ public class Simple<E> implements Queue<E>{
         // next to variable or digit, in between one whitespace e.g. y = i * (a - 3)
         // first charcter is a variable to be set, followed by symbol equals
         // followed by variable with one character or digit till end of the line
-        return !line.matches("(^[a-z]\\s=)(\\s([(]?([0-9]+|[a-z])[)]?|[\\-\\/+*]))+$");
+        return !line.matches("(^[a-z]{1})$|(^[a-z]{1})(\\s=)(\\s([(]?([0-9]+|[a-z])[)]?|[+\\-\\/*]))+$");
     }
     
     // check if everything except remarks (rem) is in lowercase
@@ -133,9 +135,9 @@ public class Simple<E> implements Queue<E>{
     @Override
     public boolean offer(E e) {
         if(isEmpty())
-            firstInstruction = lastInstruction = new InstructionNode(e,null,null);
+            firstInstruction = lastInstruction = new InstructionNode<>(e,null,null);
         else
-            lastInstruction = lastInstruction.nextInstruction = new InstructionNode(e,lastInstruction,null);
+            lastInstruction = lastInstruction.nextInstruction = new InstructionNode<>(e,lastInstruction,null);
         
         size++;
         return true;
