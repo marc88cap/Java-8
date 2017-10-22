@@ -34,37 +34,37 @@ public class InfixToPostfixConverter {
         while(!stack.isEmpty()){
             System.out.println(postfix);
             for(Character c : infix.toString().toCharArray()){
-//                System.out.print(c);
+                System.out.print(c);
                 if(Character.isDigit(c)){ // if digit, append to postfix
-//                    System.out.println(" is digit. Append to postfix. ");
+                    System.out.println(" is digit. Append to postfix. ");
                     postfix.append(c);
                 }
                 else if(c.equals('(')){ // if left parenthesis, push onto stack
-//                    System.out.println(" is left paranthesis. Push onto stack. ");
+                    System.out.println(" is left paranthesis. Push onto stack. ");
                     stack.push("(");
                 }
                 else if(isOperator(c.toString())) //if is operator
                 {
                     postfix.append(" ");
-//                    System.out.print(" is operator. ");
+                    System.out.print(" is operator. ");
                     // while precendece operators on stack are bigger or equal 
                     // to current operator pop() and append to postfix
                     while(isOperator(stack.peek()) 
                             && precedence(c.toString(), stack.peek())){
-//                        System.out.print("Pop("+stack.peek()+"). Append to postfix. ");
+                        System.out.print("Pop("+stack.peek()+"). Append to postfix. ");
                         postfix.append(stack.pop()+" ");
                     }
-//                    System.out.println("Push onto stack. ");
+                    System.out.println("Push onto stack. ");
                     stack.push(c.toString());
                 }
                 else if(c.equals(')'))
                 {
-//                    System.out.print(" is right paranthesis. ");
+                    System.out.print(" is right paranthesis. ");
                     while(!stack.peek().equals("(")){
-//                        System.out.print("Pop("+stack.peek()+"). Append to postfix. ");
+                        System.out.print("Pop("+stack.peek()+"). Append to postfix. ");
                         postfix.append(" "+stack.pop());
                     }
-//                    System.out.println("Pop("+stack.peek()+"). Remove.  ");
+                    System.out.println("Pop("+stack.peek()+"). Remove.  ");
                     stack.pop();
                 }
             }
