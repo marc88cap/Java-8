@@ -1,8 +1,6 @@
-NOTE: files need to be re-organized
-
 # Compiler simulation
-Compiles Simple code to Simpletron Machine Language.
-The compiler should be written object-oriented.
+Compiles Simple code to Simpletron Machine Language which runs on [Simpletron machine](Simpletron.java).
+The [compiler](compiler/Compiler.java) is written object-oriented using [polymorphism](https://en.wikipedia.org/wiki/Polymorphism_(computer_science)).
 ## RULES
 There are certain rules that the Simple needs to follow:
 <ul>
@@ -39,12 +37,15 @@ There are certain rules that the Simple needs to follow:
 Completed:
 <ul>
 <li>Simple programs: programs that are written in Simple language,</li>
-<li>Error checking methods for Simple program files</li>
+<li>Error checking methods for Simple program files with help of regular expressions</li>
+<li>Compiler compiles some Simple programs which results are located in [Simpletrons SML folder](simpletron/SML),</li>
 </ul>
 To do:
 <ul>
-<li>Compiler: needs to compile Simple code into SML instructions as introduced in <i>Operation codes</i> and <i>Summing up 2 numbers</i></li>
+<li>Compiler needs to be optimized: redundant instructions should be removed. e.g. loading already loaded variable into accumulator,</li>
+<li>Some additional arithmetic operators (%, ^) and syntax command should be added, as: (1. line:)<i>for x = 2 to 10 step 2</i> (2. line:)<i>do something</i> (3. line;)<i>next</i>: imitating a for loop,</li>
 </ul>
+
 # Simpletron Machine Language
 Simulation of how machine executes programs written in SML.
 ### Operation codes

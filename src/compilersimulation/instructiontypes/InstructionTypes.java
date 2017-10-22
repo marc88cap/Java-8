@@ -5,8 +5,8 @@
  */
 package compilersimulation.instructiontypes;
 
-import compilersimulation.simpletron.Memory;
-import compilersimulation.simpletron.Processor;
+import compilersimulation.simpletronhardware.Memory;
+import compilersimulation.simpletronhardware.Processor;
 
 /**
  *
@@ -17,24 +17,6 @@ public class InstructionTypes extends Processor {
         
     public InstructionTypes(int code){
 	this.code = code;
-    }
-
-    public void set(Memory mem, int o){
-	setMemory(mem);
-	setOperand(o);
-    }
-    
-    public void set(Memory mem, double ac, int o){
-	setMemory(mem);
-	setAccumulator(ac);
-	setOperand(o);
-    }
-    
-    public void set(Memory mem, int o, double ac, int ic){
-	setOperand(o);
-	setAccumulator(ac);
-	setInstructionCounter(ic);
-	setMemory(mem);
     }
     
     public void executeInstruction() throws Exception{
@@ -47,6 +29,10 @@ public class InstructionTypes extends Processor {
     
     public void setMemory(Memory mem){
 	super.memory = mem;
+    }
+    
+    public void setFilePath(String fp){
+	super.filePath = fp;
     }
     
     public void setOperand(int o){
@@ -62,6 +48,7 @@ public class InstructionTypes extends Processor {
     }
     
     public int getInstructionCounter(){
+	
 	return super.instructionCounter;
     }
     

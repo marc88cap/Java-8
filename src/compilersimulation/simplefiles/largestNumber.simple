@@ -1,7 +1,7 @@
 10 rem  Input a series of integers and determine the larges
 13 rem  First input indicates how many numbers should be processed
-14 let c = 0
-15 let l = 0
+14 let c
+15 let l
 16 input g
 20 rem
 23 rem  if input of the first number is 0 terminate
@@ -10,7 +10,9 @@
 33 rem
 35 rem  if n is smaller than largest number do not store n, jump to line 40
 40 if n <= l goto 45
+42 rem store new number as largest number
 43 let l = n
+44 rem add 1 to counter
 45 let c = c + 1
 47 rem
 48 rem  if number input is not yet finished request new number input

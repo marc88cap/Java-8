@@ -5,14 +5,16 @@
  */
 package compilersimulation.compiler;
 
+import compilersimulation.exceptions.OutOfMemoryException;
+import compilersimulation.simpletronhardware.Disk;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StreamTokenizer;
 import java.util.Arrays;
-import java.util.Formatter;
 
-import static customgenericdatastructures.InfixToPostfixConverter.toPostfix;
+import compilersimulation.compiler.InfixToPostfixConverter;
 import customgenericdatastructures.StackCustom;
+import java.io.FileNotFoundException;
 
 /**
  *
@@ -25,11 +27,23 @@ public class Compiler {
     private int backLocation = 99;
     private int instructionCounter = 0;
     private int[] SML = new int[100];
+    private String filePathSML, fileNameSML;
     
-    public String compile(String filepath) throws IOException{
-	// START OF FIRST PASS
-	StreamTokenizer st = new StreamTokenizer(new FileReader(filepath));
+    public EntryTable[] compile(String filePath) throws IOException{
+	this.fileNameSML = filePath.replaceFirst("^.+?(?=\\w+[.]?\\w+$)", "").replaceFirst("[.]\\w+$", ".sml");
+	this.filePathSML = "src/compilersimulation/simpletronhardware/SML/"+this.fileNameSML;
+	
+	firstPass(filePath);
+	secondPass(filePath);
+	return symbolTable;
+    }
+    
+    private void firstPass(String filePath) throws FileNotFoundException, IOException{
+	StreamTokenizer st = new StreamTokenizer(new FileReader(filePath));
+	InfixToPostfixConverter itpc = new InfixToPostfixConverter();
+	
 	st.eolIsSignificant(true); // treat end-of-lines as tokens
+	st.ordinaryChar('/');
 	int tokenCounter = 0;
 	Arrays.fill(flags,-1);
 	while (st.nextToken() != StreamTokenizer.TT_EOF) {
@@ -71,13 +85,15 @@ public class Compiler {
 			    
 			case "let":
 			    st.nextToken();
-			    int resultLocation = backLocation; // temporary store final location
 			    pushEntry((int)st.sval.charAt(0), 'V');
+			    location = getMemoryLocation((int)st.sval.charAt(0), 'V'); // temporary store final location
 			    
-			    st.nextToken();
+			    if(st.nextToken() != StreamTokenizer.TT_EOL)
+			    {
 			    StringBuffer sb = new StringBuffer();
 			    
-			    while(st.nextToken() != StreamTokenizer.TT_EOL)
+			    while(st.nextToken() != StreamTokenizer.TT_EOL){
+				
 				switch(st.ttype){
 				    case StreamTokenizer.TT_NUMBER:
 					pushEntry((int)st.nval, 'C');
@@ -87,15 +103,27 @@ public class Compiler {
 					sb.append(getMemoryLocation((int)st.sval.charAt(0), 'V'));
 					break;
 				    default:
+					
 					if(isOperator((char)st.ttype))
 					    sb.append(" ").append((char)st.ttype).append(" ");
 					else
 					    sb.append((char)st.ttype);
 				}
-			    // load temporary location to accumulator
-			    insertIntoSML(2000 + convertExpressionToSML(toPostfix(sb)));
-			    // store temporary location to final variable / location
-			    insertIntoSML(2100 + resultLocation);
+
+			    }
+				if(sb.length() == 2)
+				{
+				    insertIntoSML(2000 + Integer.parseInt(sb.toString()));
+				    insertIntoSML(2100 + location);
+				}
+				else
+				    // load temporary location to accumulator
+				    convertExpressionToSML(itpc.toPostfix(sb), location);
+			    }
+			    else {
+				insertIntoSML(2100 + location);
+			    }
+			    
 			    break;
 			    
 			case "if":
@@ -146,8 +174,10 @@ public class Compiler {
 		    break;
 	    }
 	}
-	// END OF FIRST PASS
-	// START OF SECOND PASS
+    }
+    
+    public void secondPass(String filePath){
+	Disk disk = new Disk();
 	for(int f=0; f<flags.length; f++){
 	    if(flags[f]>=0){
 		int location = getMemoryLocation(flags[f], 'L');
@@ -156,16 +186,14 @@ public class Compiler {
 		SML[f] = SML[f]+location;
 	    }
 	}
-	try (Formatter output = new Formatter("src/compilersimulation/simpletron/SML/"+filepath.replaceFirst("^.+?(?=\\w+[.]?\\w+$)", "").replaceFirst("[.]\\w+$", ".sml"))) {
-	    for (int sml : SML) {
-		if(sml==0) break;
-		printToFile(output, sml);
-	    }
-	    output.close();
-	}
-	// END OF SECOND PASS
 	
-	return "src/compilersimulation/simpletron/SML/"+filepath.replaceFirst("^.+?(?=\\w+[.]?\\w+$)", "").replaceFirst("[.]\\w+$", ".sml");
+	disk.openFile(this.filePathSML);
+	for (int sml : SML) {
+	    if(sml==0) break;
+	    disk.printToFile((sml > 0) ? "+"+sml : String.valueOf(sml));
+	}
+	
+	disk.closeFile();
     }
     
     public void print(){
@@ -214,31 +242,24 @@ public class Compiler {
     private void outputBranchingCodes(StringBuffer comparisonSymbol, int value){
 	int branchingLocation = getMemoryLocation(value, 'L');
 	
-	if(branchingLocation == -1)
-	{
-	    flags[instructionCounter] = value;
-	    branchingLocation = 0;
-	}
-	
 	for(int i=0;i<comparisonSymbol.length();i++){
+	    if(branchingLocation == -1)
+		flags[instructionCounter] = value;
+	    
+	    int location = (branchingLocation == -1) ? 0 : branchingLocation;
+	    
 	    switch(comparisonSymbol.toString().charAt(i)){
 		case '<':
-		    insertIntoSML(4100 + branchingLocation);
+		    insertIntoSML(4100 + location);
 		    break;
 		case '>':
-		    insertIntoSML(4000 + branchingLocation);
+		    insertIntoSML(4000 + location);
 		    break;
 		case '=':
-		    insertIntoSML(4200 + branchingLocation);
+		    insertIntoSML(4200 + location);
 		    return;
 	    }
 	}
-    }
-    
-    private void printToFile(Formatter output, int code){
-	output.format("%s%d%n", (code > 0) ? "+":"",code);
-	
-	
     }
     
     private void insertIntoSML(int code){
@@ -267,13 +288,13 @@ public class Compiler {
 	}
     }
     
-    private int convertExpressionToSML(StringBuffer postfix){
+    private int convertExpressionToSML(StringBuffer postfix, int resultLocation){
 	StackCustom<Integer> stack = new StackCustom<>();
 	int tempLocation = backLocation--;
-	System.out.println(postfix.toString());
 	String[] tp = postfix.toString().split("\\s");
 
-	for(String token : tp){
+	for(int i=0; i<tp.length;i++){
+	    String token = tp[i];
 	    if(!isOperator(token.charAt(0)))
 		stack.push(Integer.parseInt(token));
 	    else
@@ -281,16 +302,27 @@ public class Compiler {
 		int y = stack.pop();
 		int x = stack.pop();
 		int oCode = operatorCode(token);
-		insertIntoSML(2000 + x); // load first integer
+//		if(instructionCounter == 0) instructionCounter = 1;
+//		if(SML[instructionCounter-1] / 100 == 10 
+//			|| SML[instructionCounter-1] % 100 != x)
+		    insertIntoSML(2000 + x); // load first integer
+		
 		insertIntoSML(oCode + y); // use second integer and produce result
-
-		insertIntoSML(2100 + tempLocation); // store new value to temp location/or result
+		if(i<tp.length-1) // store new value to temp location until second last run
+		    insertIntoSML(2100 + tempLocation);
 		
 		stack.push(tempLocation); // push temporary location onto stack
 	    }
 	}
+	
+	// store store result to final location/variable
+	insertIntoSML(2100 + resultLocation);
+			    
 	return stack.pop(); // return temp location
     }
 
+    public String getFilePathSML(){
+	return this.filePathSML;
+    }
 }
 

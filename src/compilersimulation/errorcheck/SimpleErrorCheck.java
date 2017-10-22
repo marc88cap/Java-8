@@ -97,7 +97,7 @@ public class SimpleErrorCheck<E> implements Queue<E>{
         // next to variable or digit, in between one whitespace e.g. y = i * (a - 3)
         // first charcter is a variable to be set, followed by symbol equals
         // followed by variable with one character or digit till end of the line
-        return !line.matches("(^[a-z]\\s=)(\\s([(]?([0-9]+|[a-z])[)]?|[\\-\\/+*]))+$");
+        return !line.matches("(^[a-z]{1})$|(^[a-z]{1})(\\s=)(\\s([(]?([0-9]+|[a-z])[)]?|[+\\-\\/*]))+$");
     }
     
     // check if everything except remarks (rem) is in lowercase

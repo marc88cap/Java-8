@@ -8,5 +8,5 @@
 40 if c == g goto 99
 45 let c = c + 1
 50 goto 20
-55 s = n
+55 let s = n
 99 end
