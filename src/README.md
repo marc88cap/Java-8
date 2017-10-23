@@ -2,7 +2,7 @@
 <p>
 Exposed:
 <ul>
-<li><a href="compilersimulation">Compiler Simulation</a> - compiles Simple code to Simpletron Machine Language (SML) and executes it using polymorphism</li> 
+<li><a href="compilersimulation">Compiler Simulation</a> - compiles Simple code to Simpletron Machine Language (SML) and executes it using OOP with polymorphism</li> 
 </ul>
 </p>
 <p>
