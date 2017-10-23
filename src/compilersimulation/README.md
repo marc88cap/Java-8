@@ -39,10 +39,10 @@ Completed:
 <li>Simple programs: programs that are written in Simple language,</li>
 <li>Error checking methods for Simple program files with help of regular expressions</li>
 <li>Compiler compiles some Simple programs which results are located in [Simpletrons SML folder](simpletron/SML),</li>
+<li>Compiler needs to be optimized: redundant instructions should be removed. e.g. loading already loaded variable into accumulator,</li>
 </ul>
 To do:
 <ul>
-<li>Compiler needs to be optimized: redundant instructions should be removed. e.g. loading already loaded variable into accumulator,</li>
 <li>Some additional arithmetic operators (%, ^) and syntax command should be added, as: (1. line:)<i>for x = 2 to 10 step 2</i> (2. line:)<i>do something</i> (3. line;)<i>next</i>: imitating a for loop</li>
 </ul>
 
