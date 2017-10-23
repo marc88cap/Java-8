@@ -27,11 +27,11 @@ public class Compiler {
     private int backLocation = 99;
     private int instructionCounter = 0;
     private int[] SML = new int[100];
-    private String filePathSML, fileNameSML;
+    private String filePathSML;
     
     public EntryTable[] compile(String filePath) throws IOException{
-	this.fileNameSML = filePath.replaceFirst("^.+?(?=\\w+[.]?\\w+$)", "").replaceFirst("[.]\\w+$", ".sml");
-	this.filePathSML = "src/compilersimulation/simpletronhardware/SML/"+this.fileNameSML;
+	this.filePathSML = "src/compilersimulation/simpletronhardware/SML/"
+		+filePath.replaceFirst("^.+?(?=\\w+[.]?\\w+$)", "").replaceFirst("[.]\\w+$", ".sml");
 	
 	firstPass(filePath);
 	secondPass(filePath);
@@ -44,10 +44,8 @@ public class Compiler {
 	
 	st.eolIsSignificant(true); // treat end-of-lines as tokens
 	st.ordinaryChar('/');
-	int tokenCounter = 0;
 	Arrays.fill(flags,-1);
 	while (st.nextToken() != StreamTokenizer.TT_EOF) {
-	    tokenCounter++;
 	    // ignore rem statements
 	    if(st.sval != null && st.sval.equals("rem"))
 		while(st.nextToken() != StreamTokenizer.TT_EOL)
@@ -55,11 +53,9 @@ public class Compiler {
 
 	    switch (st.ttype) {
 		case StreamTokenizer.TT_EOL:
-		    tokenCounter = 0;
 		    break;
 
 		case StreamTokenizer.TT_NUMBER:
-		    if(tokenCounter == 1)
 			pushEntry((int)st.nval,'L');
 		    break;
 
@@ -70,6 +66,7 @@ public class Compiler {
 			    st.nextToken(); // move to variable
 			    symbol = (int)st.sval.charAt(0);
 			    insertIntoSML(1000 + backLocation);
+			    
 			    pushEntry(symbol,'V');
 			    break;
 			    
@@ -90,27 +87,27 @@ public class Compiler {
 			    
 			    if(st.nextToken() != StreamTokenizer.TT_EOL)
 			    {
-			    StringBuffer sb = new StringBuffer();
-			    
-			    while(st.nextToken() != StreamTokenizer.TT_EOL){
-				
-				switch(st.ttype){
-				    case StreamTokenizer.TT_NUMBER:
-					pushEntry((int)st.nval, 'C');
-					sb.append(getMemoryLocation((int)st.nval, 'C'));
-					break;
-				    case StreamTokenizer.TT_WORD:
-					sb.append(getMemoryLocation((int)st.sval.charAt(0), 'V'));
-					break;
-				    default:
-					
-					if(isOperator((char)st.ttype))
-					    sb.append(" ").append((char)st.ttype).append(" ");
-					else
-					    sb.append((char)st.ttype);
-				}
+				StringBuffer sb = new StringBuffer();
 
-			    }
+				while(st.nextToken() != StreamTokenizer.TT_EOL){
+
+				    switch(st.ttype){
+					case StreamTokenizer.TT_NUMBER:
+					    pushEntry((int)st.nval, 'C');
+					    sb.append(getMemoryLocation((int)st.nval, 'C'));
+					    break;
+					case StreamTokenizer.TT_WORD:
+					    sb.append(getMemoryLocation((int)st.sval.charAt(0), 'V'));
+					    break;
+					default:
+
+					    if(isOperator((char)st.ttype))
+						sb.append(" ").append((char)st.ttype).append(" ");
+					    else
+						sb.append((char)st.ttype);
+				    }
+
+				}
 				if(sb.length() == 2)
 				{
 				    insertIntoSML(2000 + Integer.parseInt(sb.toString()));
@@ -230,7 +227,8 @@ public class Compiler {
     private boolean outputComparisonOperaterCodes(boolean first, int memoryLocation){
 	if(first) // if first element: load
 	{
-	    insertIntoSML(2000+memoryLocation);
+	    if(isRedundantInstruction(memoryLocation))
+		insertIntoSML(2000+memoryLocation);
 	    first = !first;
 	}
 	else // if second element: subtract
@@ -302,12 +300,12 @@ public class Compiler {
 		int y = stack.pop();
 		int x = stack.pop();
 		int oCode = operatorCode(token);
-//		if(instructionCounter == 0) instructionCounter = 1;
-//		if(SML[instructionCounter-1] / 100 == 10 
-//			|| SML[instructionCounter-1] % 100 != x)
+		
+		if(isRedundantInstruction(x))
 		    insertIntoSML(2000 + x); // load first integer
 		
 		insertIntoSML(oCode + y); // use second integer and produce result
+		
 		if(i<tp.length-1) // store new value to temp location until second last run
 		    insertIntoSML(2100 + tempLocation);
 		
@@ -323,6 +321,10 @@ public class Compiler {
 
     public String getFilePathSML(){
 	return this.filePathSML;
+    }
+    
+    public boolean isRedundantInstruction(int memoryLocation){
+	return (memoryLocation != (SML[instructionCounter-1] % 100) ||  (SML[instructionCounter-1] - memoryLocation) == 1000);
     }
 }
 
