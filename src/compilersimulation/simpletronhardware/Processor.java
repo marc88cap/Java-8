@@ -157,7 +157,7 @@ public class Processor {
 	// print to screen
 	System.out.print(s);
 	// print to file
-	disk.openFile(filePath.replaceFirst("[.]\\w+$", "_dump.txt"));
+	disk.openFile(filePath.replaceFirst("[.]\\w+$", ".dump"));
 	disk.printToFile(s.toString());
 	disk.closeFile();
     }
