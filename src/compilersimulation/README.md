@@ -43,7 +43,7 @@ Completed:
 To do:
 <ul>
 <li>Compiler needs to be optimized: redundant instructions should be removed. e.g. loading already loaded variable into accumulator,</li>
-<li>Some additional arithmetic operators (%, ^) and syntax command should be added, as: (1. line:)<i>for x = 2 to 10 step 2</i> (2. line:)<i>do something</i> (3. line;)<i>next</i>: imitating a for loop,</li>
+<li>Some additional arithmetic operators (%, ^) and syntax command should be added, as: (1. line:)<i>for x = 2 to 10 step 2</i> (2. line:)<i>do something</i> (3. line;)<i>next</i>: imitating a for loop</li>
 </ul>
 
 # Simpletron Machine Language
@@ -200,4 +200,4 @@ First we feed the computer the instructions which lead it to run an application 
 </table>
 
 After computation is finished and application is halted it prints or dumps its register and memory to display.
-![Simpletron](graphics/Simpletron.png)
+![Simpletron](simpletronhardware/graphics/Simpletron.png)
