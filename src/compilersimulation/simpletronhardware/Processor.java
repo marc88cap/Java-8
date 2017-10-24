@@ -16,7 +16,7 @@ import compilersimulation.instructiontypes.groups.types.Branch;
 import compilersimulation.instructiontypes.groups.types.BranchNeg;
 import compilersimulation.instructiontypes.groups.types.BranchZero;
 import compilersimulation.instructiontypes.groups.types.Divide;
-import compilersimulation.instructiontypes.groups.types.Exponentation;
+import compilersimulation.instructiontypes.groups.types.Exponentiation;
 import compilersimulation.instructiontypes.groups.types.Halt;
 import compilersimulation.instructiontypes.groups.types.Load;
 import compilersimulation.instructiontypes.groups.types.Multiply;
@@ -36,7 +36,7 @@ import java.util.Scanner;
 public class Processor {
     InstructionTypes instructions[] = new InstructionTypes[14];
     //variables
-    public Memory memory = new Memory(1000); //to insert instructions
+    public Memory memory = new Memory(100); //to insert instructions
     public double accumulator = 0; //to save information
     public int instructionCounter = 0;
     public int operationCode = 0; //save operation code
@@ -55,7 +55,7 @@ public class Processor {
 	instructions[6] = new Divide(32);
 	instructions[7] = new Multiply(33);
 	instructions[8] = new Reminder(34);
-	instructions[9] = new Exponentation(35);
+	instructions[9] = new Exponentiation(35);
 	instructions[10] = new Branch(40);
 	instructions[11] = new BranchNeg(41);
 	instructions[12] = new BranchZero(42);
@@ -68,8 +68,7 @@ public class Processor {
 	    }
 	    System.out.printf("%s%n%s%n",
 		    "*** Program loading completed ***",
-		    "*** Program execution begins  ***");	    
-	    
+		    "*** Program execution begins  ***");	
 	    
 	    memory.findAndStoreConstants(symbolTable);
 	    
