@@ -42,30 +42,29 @@ public class SimpleErrorCheck<E> implements Queue<E>{
                 lineNum = Integer.valueOf(part[0]); // set store current line for next comparison
             else
                 throw new Exception("Line number must be in ascending order.");
-            // check every line but rem line if lower case letters were used: only lower case allowed
-            if(part[1].matches("^(?!rem).*") && checkLowerCase(simpleLine))
-                throw new Exception("Only lowercase letters allowed.");
             // check if commad provided is allowed / recognized
             if(checkCommand(part[1]))
                 throw new IllegalArgumentException("Command '"+part[1]+"' at line "+part[0]+" not found.");
             // check if more than one 'end' command is found: only one allowed
-            if(part[1].matches("\\b(end)\\b") && endCounter < 1)
+            if(part[1].matches("(?i)\\b(end)\\b") && endCounter < 1)
                 endCounter++;
-            else if (part[1].matches("\\b(end)\\b"))
+            else if (part[1].matches("(?i)\\b(end)\\b"))
                 throw new Exception("Command \'end\' only once allowed.");
 	    // run when command let is found
-            if(part[1].matches("\\b(let)\\b"))
+            if(part[1].matches("(?i)\\b(let)\\b"))
+	    {
 		// check if operators are allowed
-                if(checkOperator(simpleLine.replaceFirst("^[0-9]+\\slet\\s", "")))
+                if(checkOperator(simpleLine.replaceAll("(?i)^[0-9]+\\slet\\s", "")))
                     throw new ArithmeticException("Operator at line "+part[0]+" not allowed.");
                 // check for correct arithmetic order
-                else if(checkArithmeticOrder(simpleLine.replaceFirst("^[0-9]+\\slet\\s", "")))
+                if(checkArithmeticOrder(simpleLine.replaceFirst("(?i)^[0-9]+\\slet\\s", "")))
                     throw new ArithmeticException("Wrong arithmetic syntax.");
+	    }
 	    // validate input, can only be followed by one character variable
-	    if(part[1].matches("\\b(input|print)\\b") && checkInput(simpleLine.replaceFirst("^[0-9]+\\s(input|print)\\s", "")))
+	    if(part[1].matches("(?i)\\b(input|print)\\b") && checkInput(simpleLine.replaceFirst("^[0-9]+\\s(input|print)\\s", "")))
 		throw new IllegalArgumentException("Variable at line "+part[0]+" should be one lowercase letter.");
 	    // validate if line syntax
-	    if(part[1].matches("\\b(if)\\b") && checkIf(simpleLine.replaceFirst("^[0-9]+\\sif\\s", "")))
+	    if(part[1].matches("(?i)\\b(if)\\b") && checkIf(simpleLine.replaceFirst("^[0-9]+\\sif\\s", "")))
 		throw new Exception("Wrong syntax at line "+part[0]);
         }
 	return true;
@@ -97,33 +96,31 @@ public class SimpleErrorCheck<E> implements Queue<E>{
         // next to variable or digit, in between one whitespace e.g. y = i * (a - 3)
         // first charcter is a variable to be set, followed by symbol equals
         // followed by variable with one character or digit till end of the line
-        return !line.matches("(^[a-z]{1})$|(^[a-z]{1})(\\s=)(\\s([(]?([0-9]+|[a-z])[)]?|[+\\-\\/*]))+$");
-    }
-    
-    // check if everything except remarks (rem) is in lowercase
-    private boolean checkLowerCase(String line){
-        return line.matches("^(.*[A-Z].*$)");
+	// 
+        return !line.matches("(?i)((^[a-z]{1})$|(^[a-z]{1})(\\s[=]\\s(([(]?[a-z])((\\s[+\\-\\/*]\\s[(]?[a-z][)]?)?)+))?)$|(^[a-z][\\[][0-9][\\]])$");
     }
     
     // check if operator is valid
     private boolean checkOperator(String line){
-	// operators allowed: +, -, * and /
-        return line.replaceAll("([\\w\\d\\s=()])", "").matches("(.*[^+\\-*\\/].*)");
+	line = line.replaceAll("([\\w\\d\\s=()\\[\\]])", "");
+	boolean result = (line.length() == 0) ? true : line.matches("(.*[+\\-*\\/%^])");
+	// operators allowed: +, -, *, /, %, ^
+        return !result;
     }
     
     // check if command is valid
     private boolean checkCommand(String line){
-        return !line.matches("\\b(rem|input|let|fill|end|print|goto|if)\\b");
+        return !line.matches("\\b(?i)(rem|input|let|fill|end|print|goto|if)\\b");
     }
     
     // check for correct input variable
     private boolean  checkInput(String line){
-	return !line.matches("^[a-z]{1}$");
+	return !line.matches("^(?i)([a-z])([,][\\s][a-z])+");
     }
     
     // check for syntax errors
     private boolean checkIf(String line){
-	return !line.matches("^([a-z]|[-?0-9]+)\\s(==|<=|>=|>|<|=)\\s([a-z]|[-?0-9]+)\\s\\bgoto\\b\\s[0-9]+$");
+	return !line.matches("^(?i)([a-z]|[-?0-9]+)\\s(==|<=|>=|>|<|=)\\s([a-z]|[-?0-9]+)\\s\\bgoto\\b\\s[0-9]+$");
     }
     
     @Override
