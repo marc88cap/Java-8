@@ -61,7 +61,7 @@ public class InfixToPostfixConverter{
     }
     
     public boolean isOperator(String op){
-        if(op.matches("[\\+\\-\\*\\/\\^\\%]"))
+        if(op.matches("[+\\-*\\/^%]"))
             return true;
         return false;
     }
@@ -77,8 +77,9 @@ public class InfixToPostfixConverter{
             case "*":
             case "/":
             case "%":
+		return 12;
             case "^":
-                return 12;
+                return 13;
             case "+":
             case "-":
                 return 11;
