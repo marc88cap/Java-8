@@ -44,6 +44,7 @@ public class Compiler {
 	
 	st.eolIsSignificant(true); // treat end-of-lines as tokens
 	st.ordinaryChar('/');
+	st.lowerCaseMode(true); // everything is lowercase
 	Arrays.fill(flags,-1);
 	while (st.nextToken() != StreamTokenizer.TT_EOF) {
 	    // ignore rem statements
@@ -61,34 +62,63 @@ public class Compiler {
 
 		case StreamTokenizer.TT_WORD:
 		    int symbol, location;
-		    switch(st.sval){
+		    switch(st.sval.toLowerCase()){
 			case "input":
-			    st.nextToken(); // move to variable
-			    symbol = (int)st.sval.charAt(0);
-			    insertIntoSML(1000 + backLocation);
-			    
-			    pushEntry(symbol,'V');
+			    while(st.nextToken() != StreamTokenizer.TT_EOL)
+			    {
+				if(st.sval != null)
+				{
+				symbol = (int)st.sval.charAt(0);
+				insertIntoSML(1000 + backLocation);
+
+				pushEntry(symbol,'V');
+				}
+			    }
 			    break;
 			    
 			case "print":
-			    st.nextToken(); // move to variable
-			    symbol = (int)st.sval.charAt(0);
-			    location = getMemoryLocation(symbol,'V');
-			    if(location >= 0)
+			     while(st.nextToken() != StreamTokenizer.TT_EOL)
 			    {
-				insertIntoSML(1100 + location);
+				if(st.sval != null)
+				{
+				    symbol = (int)st.sval.charAt(0);
+				    location = getMemoryLocation(symbol,'V');
+				    if(location >= 0)
+				    {
+					insertIntoSML(1100 + location);
+				    }
+				}
 			    }
 			    break;
 			    
 			case "let":
 			    st.nextToken();
-			    pushEntry((int)st.sval.charAt(0), 'V');
+			    char v = st.sval.charAt(0);
+			    // push variable to declare
+			    pushEntry((int)v, 'V');
+			    // if array found
+
 			    location = getMemoryLocation((int)st.sval.charAt(0), 'V'); // temporary store final location
 			    
 			    if(st.nextToken() != StreamTokenizer.TT_EOL)
 			    {
+				// if next token is a left square bracket
+				// array declaration starts
+				if((char)st.ttype == '['){
+				    // move to next token: expected number
+				    st.nextToken();
+				    // store the number
+				    int num = (int)st.nval;
+				    
+				    for(int i=0;i<num;i++)
+					pushEntry((int)v, 'V', true);
+				    
+				    while(st.nextToken() != StreamTokenizer.TT_EOL);
+				    break;
+				}
+				// array declaration ends
 				StringBuffer sb = new StringBuffer();
-
+				
 				while(st.nextToken() != StreamTokenizer.TT_EOL){
 
 				    switch(st.ttype){
@@ -120,7 +150,7 @@ public class Compiler {
 			    else {
 				insertIntoSML(2100 + location);
 			    }
-			    
+			    print();
 			    break;
 			    
 			case "if":
@@ -224,6 +254,13 @@ public class Compiler {
 	}
     }
     
+    private void pushEntry(int symbol, char type, boolean force){
+	if(force)
+	    symbolTable[frontLocation++] = new EntryTable(symbol,type,(type == 'L') ? instructionCounter : backLocation--);
+	else
+	    pushEntry(symbol,type);
+    }
+    
     private boolean outputComparisonOperaterCodes(boolean first, int memoryLocation){
 	if(first) // if first element: load
 	{
@@ -268,7 +305,8 @@ public class Compiler {
     }
     
     private boolean isOperator(char operator){
-	return operator == '+' || operator == '-' || operator == '*' || operator == '/';
+	return operator == '+' || operator == '-' || operator == '/' 
+		|| operator == '*' || operator == '%' || operator == '^';
     }
     
     private int operatorCode(String operator){
@@ -281,6 +319,10 @@ public class Compiler {
 		return 3200;
 	    case "*":
 		return 3300;
+	    case "%":
+		return 3400;
+	    case "^":
+		return 3500;
 	    default:
 		throw new ArithmeticException("Operator not allowed.");
 	}
@@ -327,4 +369,3 @@ public class Compiler {
 	return (memoryLocation != (SML[instructionCounter-1] % 100) ||  (SML[instructionCounter-1] - memoryLocation) == 1000);
     }
 }
-
