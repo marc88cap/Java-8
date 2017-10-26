@@ -23,9 +23,11 @@ There are certain rules that the Simple needs to follow:
                     <li>-</li>
                     <li>*</li>
                     <li>/</li>
+                    <li>^</li>
+                    <li>%</li>
                 </ul>
             </li>
-            <li>Simple recognizes only <i>lowercase letters</i>,</li>
+            <li>Simple recognizes all case letters as <i>lowercase letters</i>,</li>
             <li>A <i>variable name</i> is a single letter,</li>
             <li>Simple does not allow string manipulation.</li>
         </ul>
@@ -39,11 +41,13 @@ Completed:
 <li>Simple programs: programs that are written in Simple language,</li>
 <li>Error checking methods for Simple program files with help of regular expressions</li>
 <li>Compiler compiles some Simple programs which results are located in [Simpletrons SML folder](simpletron/SML),</li>
-<li>Compiler needs to be optimized: redundant instructions should be removed. e.g. loading already loaded variable into accumulator,</li>
+<li>Compiler is optimized: e.g. compiler is not loading already loaded variable into the accumulator,</li>
+<li>Added arithmetic operators Exponentiation and Reminder,</li>
+<li>Command gosub and return added: acts like a method call in Java.</li>
 </ul>
 To do:
 <ul>
-<li>Some additional arithmetic operators (%, ^) and syntax command should be added, as: (1. line:)<i>for x = 2 to 10 step 2</i> (2. line:)<i>do something</i> (3. line;)<i>next</i>: imitating a for loop</li>
+<li>Syntax command should be added, as: (1. line:)<i>for x = 2 to 10 step 2</i> (2. line:)<i>do something</i> (3. line;)<i>next</i>: imitating a for loop</li>
 </ul>
 
 # Simpletron Machine Language
