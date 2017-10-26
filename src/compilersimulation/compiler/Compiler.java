@@ -56,7 +56,7 @@ public class Compiler {
 	    if(st.sval != null && st.sval.equals("rem"))
 		while(st.nextToken() != StreamTokenizer.TT_EOL)
 		{/* do nothing, skip rem lines */}
-	    // any other line than rem
+	    // any other line than rem is processed
 	    switch (st.ttype) {
 		// if end of line just break the switch
 		case StreamTokenizer.TT_EOL:
