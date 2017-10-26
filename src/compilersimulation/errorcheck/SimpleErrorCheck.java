@@ -30,6 +30,7 @@ public class SimpleErrorCheck<E> implements Queue<E>{
     // method checks if the loaded program is written as expected
     public boolean checkErrors() throws Exception{
         int endCounter = 0;
+	int gosubCounter = 0, returnCounter = 0; 
         int lineNum = -1;
         while(fileSimpleCode.hasNext())
         {
@@ -53,20 +54,37 @@ public class SimpleErrorCheck<E> implements Queue<E>{
 	    // run when command let is found
             if(part[1].matches("(?i)\\b(let)\\b"))
 	    {
+		String line = simpleLine.replaceAll("(?i)^[0-9]+\\slet\\s", "");
+		
 		// check if operators are allowed
-                if(checkOperator(simpleLine.replaceAll("(?i)^[0-9]+\\slet\\s", "")))
+                if(checkOperator(line))
                     throw new ArithmeticException("Operator at line "+part[0]+" not allowed.");
                 // check for correct arithmetic order
-                if(checkArithmeticOrder(simpleLine.replaceFirst("(?i)^[0-9]+\\slet\\s", "")))
+                if(checkArithmeticOrder(line))
+//		    if(checkArrayDeclaration(line))
                     throw new ArithmeticException("Wrong arithmetic syntax.");
 	    }
+	    // check branching command
+	    if(part[1].matches("(?i)\\b(goto|gosub)\\b"))
+	    {
+		if(part[1].matches("(?i)\\b(gosub)\\b"))
+		    gosubCounter++;
+		if(checkBranching(simpleLine.replaceFirst("(?i)^[0-9]+\\s(goto|gosub)\\s", "")))
+		    throw new IllegalArgumentException("Must be a line number.");
+	    }
+	    // return counter
+	    if(part[1].matches("(?i)\\b(return)\\b"))
+		returnCounter++;
 	    // validate input, can only be followed by one character variable
-	    if(part[1].matches("(?i)\\b(input|print)\\b") && checkInput(simpleLine.replaceFirst("^[0-9]+\\s(input|print)\\s", "")))
+	    if(part[1].matches("(?i)\\b(input|print)\\b") && checkInput(simpleLine.replaceFirst("(?i)^[0-9]+\\s(input|print)\\s", "")))
 		throw new IllegalArgumentException("Variable at line "+part[0]+" should be one lowercase letter.");
 	    // validate if line syntax
 	    if(part[1].matches("(?i)\\b(if)\\b") && checkIf(simpleLine.replaceFirst("^[0-9]+\\sif\\s", "")))
 		throw new Exception("Wrong syntax at line "+part[0]);
         }
+	
+	if(returnCounter != gosubCounter)
+	    throw new Exception("\'return\' count and \'gosub\' count do not match.");
 	return true;
     }
     
@@ -100,9 +118,16 @@ public class SimpleErrorCheck<E> implements Queue<E>{
         return !line.matches("(?i)((^[a-z]{1})$|(^[a-z]{1})(\\s[=]\\s(([(]?[a-z])((\\s[+\\-\\/*]\\s[(]?[a-z][)]?)?)+))?)$|(^[a-z][\\[][0-9][\\]])$");
     }
     
+//    private boolean checkArrayDeclaration(String line){
+//	return !line.matches("(?i)^([a-z])\\s[=]\\s([{][0-9]+([,]\\s[0-9]+)+[}])$");
+//    }
+    
+    private boolean checkBranching(String line){
+	return !line.matches("(?i)^([0-9]+){1}$");
+    }
     // check if operator is valid
     private boolean checkOperator(String line){
-	line = line.replaceAll("([\\w\\d\\s=()\\[\\]])", "");
+	line = line.replaceAll("([\\w\\d\\s=()])", "");
 	boolean result = (line.length() == 0) ? true : line.matches("(.*[+\\-*\\/%^])");
 	// operators allowed: +, -, *, /, %, ^
         return !result;
@@ -110,7 +135,7 @@ public class SimpleErrorCheck<E> implements Queue<E>{
     
     // check if command is valid
     private boolean checkCommand(String line){
-        return !line.matches("\\b(?i)(rem|input|let|fill|end|print|goto|if)\\b");
+        return !line.matches("\\b(?i)(rem|input|let|fill|end|print|goto|if|gosub|return)\\b");
     }
     
     // check for correct input variable
