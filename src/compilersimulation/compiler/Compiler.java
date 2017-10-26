@@ -22,11 +22,14 @@ import java.io.FileNotFoundException;
  */
 public class Compiler {
     private EntryTable[] symbolTable = new EntryTable[100];
-    private int[] flags = new int[100];
+    private int[] lineFlags = new int[100];
+    private int[] variableFlags = new int[100];
     private int frontLocation = 00;
     private int backLocation = 99;
     private int instructionCounter = 0;
+    private int returnCounter = 0;
     private int[] SML = new int[100];
+    private int[] goSub = new int[100];
     private String filePathSML;
     
     public EntryTable[] compile(String filePath) throws IOException{
@@ -45,8 +48,11 @@ public class Compiler {
 	st.eolIsSignificant(true); // treat end-of-lines as tokens
 	st.ordinaryChar('/');
 	st.lowerCaseMode(true); // everything is lowercase
-	Arrays.fill(flags,-1);
+	Arrays.fill(lineFlags,-1);
+	Arrays.fill(variableFlags,-1);
+	int lineNumber = -1;
 	while (st.nextToken() != StreamTokenizer.TT_EOF) {
+	    int subrouteReturn = -1;
 	    // ignore rem statements
 	    if(st.sval != null && st.sval.equals("rem"))
 		while(st.nextToken() != StreamTokenizer.TT_EOL)
@@ -57,6 +63,7 @@ public class Compiler {
 		    break;
 
 		case StreamTokenizer.TT_NUMBER:
+			lineNumber = (int)st.nval;
 			pushEntry((int)st.nval,'L');
 		    break;
 
@@ -86,6 +93,11 @@ public class Compiler {
 				    if(location >= 0)
 				    {
 					insertIntoSML(1100 + location);
+				    }
+				    else
+				    {
+					variableFlags[instructionCounter] = symbol;
+					insertIntoSML(1100);
 				    }
 				}
 			    }
@@ -176,7 +188,15 @@ public class Compiler {
 			    // get branching location
 			    outputBranchingCodes(comparisonSymbol, (int)st.nval);
 			    break;
-			    
+			case "gosub":
+			    st.nextToken();
+			    symbol = (int)st.nval;
+			    lineFlags[instructionCounter] = symbol;
+			    insertIntoSML(4400);
+			    break;
+			case "return":
+			    insertIntoSML(4500);
+			    break;
 			case "goto":
 			    st.nextToken();
 			    symbol = (int)st.nval;
@@ -185,7 +205,7 @@ public class Compiler {
 				insertIntoSML(4000 + location);
 			    else
 			    {
-				flags[instructionCounter] = symbol;
+				lineFlags[instructionCounter] = symbol;
 				insertIntoSML(4000);
 			    }
 			    break;
@@ -205,19 +225,60 @@ public class Compiler {
     
     public void secondPass(String filePath){
 	Disk disk = new Disk();
-	for(int f=0; f<flags.length; f++){
-	    if(flags[f]>=0){
-		int location = getMemoryLocation(flags[f], 'L');
-		if(location == -1)
-		    throw new IllegalArgumentException("Line "+flags[f]+" is missing.");
+	int goSubCount = 0;
+	for(int f=0; f<lineFlags.length; f++){
+	    if(lineFlags[f]>=0){
+		int location = getMemoryLocation(lineFlags[f], 'L');
+		if(location == -1){
+		    throw new IllegalArgumentException("Line "+lineFlags[f]+" is missing.");
+		}
+		
+		if(SML[f] == 4400)
+		{
+		    int i = 0;
+		    SML[f] = SML[f] + goSubCount;
+		    while(SML[location+i] / 100 != 45)
+		    {
+			goSub[goSubCount++] = SML[location+i];
+			i++;
+		    }
+		    goSub[goSubCount++] = SML[location+i];
+		}
+		else
+		    SML[f] = SML[f]+location;
+		
+		    
+	    }
+	    
+	    if(variableFlags[f]>=0){
+		int location = getMemoryLocation(variableFlags[f], 'V');
+		if(location == -1){
+		    throw new IllegalArgumentException("Variable "+(char)variableFlags[f]+" is missing.");
+		}
 		SML[f] = SML[f]+location;
+		    
 	    }
 	}
 	
 	disk.openFile(this.filePathSML);
 	for (int sml : SML) {
-	    if(sml==0) break;
-	    disk.printToFile((sml > 0) ? "+"+sml : String.valueOf(sml));
+	    
+	    if(sml / 100 == 44)
+	    {
+		int i = 0;
+		int num = sml % 100;
+		
+		while(goSub[num+i] > 0 && goSub[num+i] != 4500)
+		{
+		    disk.printToFile((goSub[num+i] > 0) ? "+"+goSub[num+i] : String.valueOf(goSub[num+i]));
+		    i++;
+		}
+		
+	    }
+	    else
+		disk.printToFile((sml > 0) ? "+"+sml : String.valueOf(sml));
+	    
+	    if(sml == 4300) break;
 	}
 	
 	disk.closeFile();
@@ -279,7 +340,7 @@ public class Compiler {
 	
 	for(int i=0;i<comparisonSymbol.length();i++){
 	    if(branchingLocation == -1)
-		flags[instructionCounter] = value;
+		lineFlags[instructionCounter] = value;
 	    
 	    int location = (branchingLocation == -1) ? 0 : branchingLocation;
 	    
