@@ -21,15 +21,15 @@ import java.io.FileNotFoundException;
  * @author markoc
  */
 public class Compiler {
-    private EntryTable[] symbolTable = new EntryTable[100];
+    private EntryTable[] symbolTable = new EntryTable[100]; // table of symbols (variables, constants, line numbers, etc) and their locations in memory
     private int[] lineFlags = new int[100];
     private int[] variableFlags = new int[100];
-    private int[] SML = new int[100];
-    private int[] goSub = new int[100];
-    private int frontLocation = 00;
-    private int backLocation = 99;
-    private int instructionCounter = 0;
-    private String filePathSML;
+    private int[] SML = new int[100]; // to store SML instructions before writing to file
+    private int[] goSub = new int[100]; // to store goSub (method) instructions before writing to file
+    private int frontLocation = 00; // in memory array front location counter
+    private int backLocation = 99; // in memory array back location counter
+    private int instructionCounter = 0; // counter of instructions
+    private String filePathSML; // sml file path to write in
     
     public EntryTable[] compile(String filePath) throws IOException{
 	this.filePathSML = "src/compilersimulation/simpletronhardware/SML/"
@@ -37,6 +37,7 @@ public class Compiler {
 	
 	firstPass(filePath);
 	secondPass(filePath);
+	// return symbolTable: constants need to be extracted
 	return symbolTable;
     }
     // start with first pass: make an instruction list, but some instructions
