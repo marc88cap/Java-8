@@ -9,7 +9,7 @@ Simple language files `.simple` are located in the folder `simplefiles` and Simp
 ### Sequence Diagram
 ![SequenceDiagram](graphics/jpg/Simpletron_sequence_diagram.jpg)
 # Compiler simulation
-Compiles Simple code to Simpletron Machine Language which runs on [Simpletron machine].
+Compiles Simple code to Simpletron Machine Language which runs on Simpletron machine.
 
 ## RULES of Simple Language Syntax
 Every **statement** constists of a **line number** and a **command** followed by command specific syntax.
