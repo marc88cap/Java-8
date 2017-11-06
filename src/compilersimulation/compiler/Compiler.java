@@ -307,7 +307,7 @@ public class Compiler {
 			    
 			case "end":
 			    // insert directly
-			    insertIntoSML(9900);
+			    insertIntoSML(4300);
 			    break;
 			default:
 			    // do nothing
@@ -417,7 +417,7 @@ public class Compiler {
 	    else
 		disk.printToFile((sml > 0) ? "+"+sml : String.valueOf(sml));
 	    // when the HALT instruction is found. insertion is completed
-	    if(sml == 9900) break;
+	    if(sml == 4300) break;
 	}
 	// close the file
 	disk.closeFile();
