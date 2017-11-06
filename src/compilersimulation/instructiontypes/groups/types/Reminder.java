@@ -20,9 +20,10 @@ public class Reminder extends Arithmetic{
     
     @Override
     public void executeInstruction() throws Exception{
-        if(errorInput((int)(accumulator % super.memory.fetchAtIndex(operand))))
+	double result = accumulator % super.memory.fetchAtIndex(operand);
+        if(checkInputError((int)result))
 	    throw new OverflowException();
         
-	accumulator %= super.memory.fetchAtIndex(operand);
+	accumulator = result;
     }
 }
