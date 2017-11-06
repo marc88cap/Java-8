@@ -34,7 +34,7 @@ import java.util.Scanner;
  * @author markoc
  */
 public class Processor {
-    InstructionTypes instructions[] = new InstructionTypes[14];
+    private InstructionTypes instructions[] = new InstructionTypes[14];
     //variables
     public Memory memory = new Memory(100); //to insert instructions
     public double accumulator = 0; //to save information
@@ -78,15 +78,12 @@ public class Processor {
 		operationCode = getOperationCode((int)instructionRegister);
 		operand = getOperand((int)instructionRegister);
 		for(InstructionTypes it : instructions){
-		    
+		    // start
 		    if(it.getOperationCode() == operationCode){
+			// set data
 			if (it instanceof InputAndOutput)
 			{
 			    ((InputAndOutput) it).set(memory, operand);
-			    
-			    it.executeInstruction();
-			    
-			    memory = it.getMemory();
 			}
 			else if(it instanceof Arithmetic || it instanceof LoadAndStore)
 			{
@@ -96,7 +93,23 @@ public class Processor {
 			    }
 			    else
 				((LoadAndStore) it).set(memory,accumulator,operand);
-			    it.executeInstruction();
+			    
+			}
+			else if(it instanceof TransferOfControl)
+			{
+			    ((TransferOfControl) it).set(memory, accumulator, operand, instructionCounter, filePath);
+			}
+			
+			// execute instruction
+			it.executeInstruction();
+			
+			// get changed data
+			if (it instanceof InputAndOutput)	    
+			{			    
+			    memory = it.getMemory();
+			}
+			else if(it instanceof Arithmetic || it instanceof LoadAndStore)
+			{
 			    
 			    if(it instanceof LoadAndStore)
 				memory = it.getMemory();
@@ -105,14 +118,9 @@ public class Processor {
 			}
 			else if(it instanceof TransferOfControl)
 			{
-			    ((TransferOfControl) it).set(memory, accumulator, operand, instructionCounter, filePath);
-			    
-			    it.executeInstruction();
-			    
 			    instructionCounter = ((TransferOfControl) it).getInstructionCounter();
 			}
-
-		    } 
+		    } // end
 		}
 	    }  
 	    
@@ -169,7 +177,7 @@ public class Processor {
         return instruction % 100;
     }
     
-    public boolean errorInput(int input){
+    public boolean checkInputError(int input){
 	return input < (-9999) || input > 9999;
     }
     
