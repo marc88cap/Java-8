@@ -22,9 +22,10 @@ public class Simpletron {
     public static void main(String args[]){
         Processor p = new Processor();	
 	Compiler app = new Compiler();
-	SimpleErrorCheck<String> s = new SimpleErrorCheck<>();
+	SimpleErrorCheck s = new SimpleErrorCheck();
+	
 	try{ 
-	    String filePath = s.openFile("src/compilersimulation/simplefiles/sumOfTwo.simple");
+	    String filePath = s.openFile("src/compilersimulation/simplefiles/sentinelLoopSum.simple");
 	    System.out.println("***       File is ready	      ***");
 	    System.out.println("***    Starting compilation   ***");
 	    
