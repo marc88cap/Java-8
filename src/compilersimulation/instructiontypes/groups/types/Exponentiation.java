@@ -20,9 +20,10 @@ public class Exponentiation extends Arithmetic{
     
     @Override
     public void executeInstruction() throws Exception{
-        if(errorInput((int)(Math.pow(accumulator, super.memory.fetchAtIndex(operand)))))
+	double result = Math.pow(accumulator, super.memory.fetchAtIndex(operand));
+        if(checkInputError((int)result))
 	    throw new OverflowException();
         
-	accumulator = Math.pow(accumulator, super.memory.fetchAtIndex(operand));
+	accumulator = result;
     }
 }
