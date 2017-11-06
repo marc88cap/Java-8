@@ -6,13 +6,15 @@
 30 rem  add integers and store result in c
 33 rem
 35 rem go to line 70 make calculations and return
-38 gosub 70
-40 if a <= 3 goto 10
+36 gosub 70
+37 rem if
+38 if a <= 3 goto 10
 45 rem
-50 rem  print the result
-55 print a, b, c
+50 rem print result
+55 print c
 60 rem  terminate program execution
 65 end
-70 Let C = a + b
+69 rem calculation method/object
+70 Let c = a + b
 75 return
 
