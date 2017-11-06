@@ -178,7 +178,7 @@ public class Processor {
     }
     
     public boolean checkInputError(int input){
-	return input < (-9999) || input > 9999;
+	return input <= (-9999) || input >= 9999;
     }
     
     public void setFilePathToExecute(String filePath){
