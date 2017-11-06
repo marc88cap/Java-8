@@ -152,13 +152,13 @@ Simulation of how machine executes programs written in SML.
         <td></td>
         <td>34</td>
         <td>REMINDER</td>
-        <td>Calculate a reminder of a word in the accumulator by the word from a specific location in memory by the(leave the result in the accumulator).</td>
+        <td>Calculate a reminder of a word in the accumulator by the word from a specific location in memory (leave the result in the accumulator).</td>
     </tr>
     <tr>
         <td></td>
         <td>35</td>
         <td>EXPONENTIATION</td>
-        <td>The word in the accumulator to the power of a word from a specific location in memory(leave the result in the accumulator).</td>
+        <td>The word in the accumulator to the power of a word from a specific location in memory (leave the result in the accumulator).</td>
     </tr>
     <tr>
         <td></td>
