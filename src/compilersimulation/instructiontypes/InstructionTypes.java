@@ -23,26 +23,6 @@ public class InstructionTypes extends Processor {
 	System.out.println("Nothing to execute");
     }
     
-    public void setInstructionCounter(int ic){
-	super.instructionCounter = ic;
-    }
-    
-    public void setMemory(Memory mem){
-	super.memory = mem;
-    }
-    
-    public void setFilePath(String fp){
-	super.filePath = fp;
-    }
-    
-    public void setOperand(int o){
-	super.operand = o;
-    }
-    
-    public void setAccumulator(double ac){
-	super.accumulator = ac;
-    }
-    
     public int getOperationCode(){
 	return this.code;
     }
@@ -58,9 +38,5 @@ public class InstructionTypes extends Processor {
     
     public Memory getMemory(){
 	return super.memory;
-    }
-    
-    public int getOperand(){
-	return super.operand;
     }
 }
