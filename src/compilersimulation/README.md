@@ -85,7 +85,8 @@ are allowed to use only the following operators and have the same precedence as 
 * Exponentiation (**^**)
 
 ## Other Rules
- * Simple recognizes all case letters as *lowercase letters*
+ * **Line numbers** must be in ascending order,
+ * Simple recognizes all case letters as *lowercase letters*,
  * A **variable name** is a **single letter**,
  * Simple allowes numbers from range -9999 to 9999 inclusive,
  * Simple does not allow string manipulation.
