@@ -12,17 +12,18 @@ import compilersimulation.instructiontypes.groups.Arithmetic;
  *
  * @author markoc
  */
-public class Exponentation extends Arithmetic{
+public class Exponentiation extends Arithmetic{
     
-    public Exponentation(int code){
+    public Exponentiation(int code){
 	super(code);
     }
     
     @Override
     public void executeInstruction() throws Exception{
-        if(!errorInput((int)(accumulator * super.memory.fetchAtIndex(operand))))
+	double result = Math.pow(accumulator, super.memory.fetchAtIndex(operand));
+        if(checkInputError((int)result))
 	    throw new OverflowException();
         
-	accumulator = Math.pow(accumulator, super.memory.fetchAtIndex(operand));
+	accumulator = result;
     }
 }

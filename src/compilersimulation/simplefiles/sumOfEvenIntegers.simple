@@ -1,0 +1,17 @@
+10 rem Calculate the sum of odd integers
+15 rem
+20 rem define c 
+30 let c
+35 rem
+37 rem loop until a is 30
+40 for a = 2 to 30 step 2
+43 rem
+44 rem add a to c
+45 let c = c + a
+50 next
+55 rem
+56 rem print to screen
+60 print c
+66 rem
+67 rem terminate
+99 end

@@ -20,20 +20,23 @@ import java.io.IOException;
  */  
 public class Simpletron {
     public static void main(String args[]){
-        Processor p = new Processor();
-	
-	
+        Processor p = new Processor();	
 	Compiler app = new Compiler();
-	SimpleErrorCheck<String> s = new SimpleErrorCheck<>();
+	SimpleErrorCheck s = new SimpleErrorCheck();
+	
 	try{ 
-	    String filePath = s.openFile("src/compilersimulation/simplefiles/counterLoopAvg.simple");
-	    System.out.println("File is ready for compilation....");
-	    System.out.println("Starting compilation process....");
+	    String filePath = s.openFile("src/compilersimulation/simplefiles/sentinelLoopSum.simple");
+	    System.out.println("***       File is ready	      ***");
+	    System.out.println("***    Starting compilation   ***");
 	    
 	    EntryTable[] symbolTable = app.compile(filePath);
 	    
+	    System.out.println("***    Compilation finished   ***");
+	    
 	    p.setFilePathToExecute(app.getFilePathSML());
-	    p.run(symbolTable);
+	    
+	    System.out.println("***  Program loading started  ***");
+	    p.run(symbolTable); 
 	}
 	catch(IOException e){
 	    e.printStackTrace();

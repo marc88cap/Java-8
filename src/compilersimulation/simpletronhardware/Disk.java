@@ -14,11 +14,9 @@ import java.util.Formatter;
  */
 public class Disk {
     private Formatter fileFormatter;
-    private String filePath;
     
     public void openFile(String filepath){
 	try{
-	    this.filePath = filepath;
 	    fileFormatter = new Formatter(filepath);
 	}
 	catch(FileNotFoundException e){
@@ -30,9 +28,7 @@ public class Disk {
 	fileFormatter.format("%s%n", string);
     }
     
-    public String closeFile(){
+    public void closeFile(){
 	fileFormatter.close();
-	
-	return filePath;
     }
 }

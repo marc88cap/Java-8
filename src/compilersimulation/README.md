@@ -1,57 +1,101 @@
+# [Simpletron](Simpletron.java)
+Simulation of a virtual machine runs a **Compiler** to compile **Simple language** to **Simpletron Machine Language** which is then executed with help of virtual hardware components written object-oriented using [polymorphism](https://en.wikipedia.org/wiki/Polymorphism_(computer_science)).
+
+Simple language files `.simple` are located in the folder `simplefiles` and Simpletron Machine Language files `.sml` are located in the folder `simpletronhardware/SML` together with `.dump` files.
+
+## Diagrams
+### Class Diagram
+![ClassDiagram](graphics/jpg/Simpletron_class_diagram.jpg)
+### Sequence Diagram
+![SequenceDiagram](graphics/jpg/Simpletron_sequence_diagram.jpg)
 # Compiler simulation
-Compiles Simple code to Simpletron Machine Language which runs on [Simpletron machine](Simpletron.java).
-The [compiler](compiler/Compiler.java) is written object-oriented using [polymorphism](https://en.wikipedia.org/wiki/Polymorphism_(computer_science)).
-## RULES
-There are certain rules that the Simple needs to follow:
-<ul>
-    <li>Every <i>statement</i> consists of a <i>line number</i> and a <i>instruction</i>:
-        <ul><li><i>Line numbers</i> must appear in <i>ascending</i> order,</li>
-            <li>Each <i>statement</i> begins with the following <i>commands</i>:
-                <ul>
-                    <li><b>rem</b> is a remark that represents a comment and is ignored by the compiler - can be used multiple times,</li>
-                    <li><b>input</b> reads a value inputed from the keyboard and save to the following variable - can be used multiple times,</li>
-                    <li><b>let</b> declares a variable and sets its value - can be used multiple times,</li>
-                    <li><b>print</b> prints variables value - can be used multiple times,</li>
-                    <li><b>goto</b> moves to the following line e.g. <i>goto 10' moves to line 10</i> - can be used multiple times,</li>
-                    <li><b>if/goto</b> is a conditional expression e.g. <i>if i == 5 goto 10</i> - can be used multiple times,</li>
-                    <li><b>end</b> terminates the program, only one <i>end</i> command per code allowed.</li>
-                </ul>
-            </li>
-            <li><i>Arithmetic expressions</i> are allowed to use only following <i>operators</i> and have the same <i>precedence</i> as in <i>Java</i>, however <i>parentheses</i> can be used to change the <i>order of evaluation</i> of the expression:
-                <ul>
-                    <li>+</li>
-                    <li>-</li>
-                    <li>*</li>
-                    <li>/</li>
-                </ul>
-            </li>
-            <li>Simple recognizes only <i>lowercase letters</i>,</li>
-            <li>A <i>variable name</i> is a single letter,</li>
-            <li>Simple does not allow string manipulation.</li>
-        </ul>
-    </li>
-</ul>
+Compiles Simple code to Simpletron Machine Language which runs on [Simpletron machine].
 
-### Progress 
+## RULES of Simple Language Syntax
+Every **statement** constists of a **line number** and a **command** followed by command specific syntax.
+### rem 
+or *remark* is ignored by the compiler: 
+```
+10 rem next line is input
+```
+### input
+followed by a one character variable name: 
+```
+11 input a
+```
+Asks user to input a number.
 
-Completed:
-<ul>
-<li>Simple programs: programs that are written in Simple language,</li>
-<li>Error checking methods for Simple program files with help of regular expressions</li>
-<li>Compiler compiles some Simple programs which results are located in [Simpletrons SML folder](simpletron/SML),</li>
-</ul>
-To do:
-<ul>
-<li>Compiler needs to be optimized: redundant instructions should be removed. e.g. loading already loaded variable into accumulator,</li>
-<li>Some additional arithmetic operators (%, ^) and syntax command should be added, as: (1. line:)<i>for x = 2 to 10 step 2</i> (2. line:)<i>do something</i> (3. line;)<i>next</i>: imitating a for loop</li>
-</ul>
+### let
+has more options: 
+```
+12 let a
+```
+Declares variable `a` to 0. 
+```
+13 let a = 1
+```
+Declares variable `a` to 1. 
+```
+14 let a = b + c
+```
+Declers variable `a` to a sum of `b` and `c`. 
+```
+15 let a = b + (c - 2) * 10
+```
+Declares variable `a` to the result of `b + (c - 2) * 10`.
+
+### goto
+Followed by a line number redirects to that line number: `16 goto 10` moves to line 10,
+### if
+followed by a condition and a **goto** command, if the condition is **true** `goto` command is executed: `if x == 0 goto 10`
+### for
+followed by a \*variable declaration\* followed by a **to** keyword followed by a \*number\*. Optional followed by a **step** keyword followed by a \*number*\: 
+```
+for x = 1 to 10
+print x
+next
+```
+The example executes 10 times everything that is between a `for` line and a `next` line, this example prints the value `x`, each in a new line resulting in a count 1-10 inclusive.
+```
+for x = 1 to 10 step 2
+print x
+next
+```
+Same as previous example but it executes 5 times, `step` declares the number to be added to `x` on each loop.
+### gosub
+followed by a **line number**: `gosub 12` moves to the line 12 and executes following lines until keyword `return` is not found, then returns to the line after `gosub 12`. This command acts like a method call:
+ ```
+ 10 let x = 2
+ 11 let y = 3
+ 12 gosub 30
+ 13 print r
+ 15 end
+ 30 let r = x + y
+ 31 return
+ ```
+The above example moves to line line 30 and calculates a value of `r` variable then returns back to line 13 and prints the value to the screen.
+
+## Arithmetic Expressions 
+are allowed to use only the following operators and have the same precedence as in Java, parentheses can be used to change the order of evaluation of the expression:
+* Addition (**+**)
+* Subtraction (**\-**)
+* Multiplication (**\***)
+* Division (**/**)
+* Reminder (**%**)
+* Exponentiation (**^**)
+
+## Other Rules
+ * Simple recognizes all case letters as *lowercase letters*
+ * A **variable name** is a **single letter**,
+ * Simple allowes numbers from range -9999 to 9999 inclusive,
+ * Simple does not allow string manipulation.
 
 # Simpletron Machine Language
 Simulation of how machine executes programs written in SML.
-### Operation codes
+### Operation Codes
 <table>
     <th>
-        <td>Operation code</td>
+        <td>Code</td>
         <td>Operation</td>
         <td>Description</td>
     </th>
@@ -105,6 +149,18 @@ Simulation of how machine executes programs written in SML.
     </tr>
     <tr>
         <td></td>
+        <td>34</td>
+        <td>REMINDER</td>
+        <td>Calculate a reminder of a word in the accumulator by the word from a specific location in memory by the(leave the result in the accumulator).</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>35</td>
+        <td>EXPONENTIATION</td>
+        <td>The word in the accumulator to the power of a word from a specific location in memory(leave the result in the accumulator).</td>
+    </tr>
+    <tr>
+        <td></td>
         <td>40</td>
         <td>BRANCH</td>
         <td>Branch to a specific location in memory.</td>
@@ -129,7 +185,7 @@ Simulation of how machine executes programs written in SML.
     </tr>
 </table>
 
-### Summing up 2 numbers
+### Summing Two Numbers
 First we feed the computer the instructions which lead it to run an application that sums up two numbers.
 <table>
     <th>

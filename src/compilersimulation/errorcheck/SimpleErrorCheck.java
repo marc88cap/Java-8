@@ -8,28 +8,19 @@ package compilersimulation.errorcheck;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Queue;
 import java.util.Scanner;
 /**
  *
  * @author markoc
  */
-public class SimpleErrorCheck<E> implements Queue<E>{
-    private InstructionNode<E> firstInstruction;
-    private InstructionNode<E> lastInstruction;
-    private int size;
+public class SimpleErrorCheck{
     private Path filePath;
     private Scanner fileSimpleCode;
-    
-    public SimpleErrorCheck(){
-        firstInstruction = lastInstruction = null;
-    }
     
     // method checks if the loaded program is written as expected
     public boolean checkErrors() throws Exception{
         int endCounter = 0;
+	int gosubCounter = 0, returnCounter = 0; 
         int lineNum = -1;
         while(fileSimpleCode.hasNext())
         {
@@ -42,32 +33,52 @@ public class SimpleErrorCheck<E> implements Queue<E>{
                 lineNum = Integer.valueOf(part[0]); // set store current line for next comparison
             else
                 throw new Exception("Line number must be in ascending order.");
-            // check every line but rem line if lower case letters were used: only lower case allowed
-            if(part[1].matches("^(?!rem).*") && checkLowerCase(simpleLine))
-                throw new Exception("Only lowercase letters allowed.");
             // check if commad provided is allowed / recognized
             if(checkCommand(part[1]))
                 throw new IllegalArgumentException("Command '"+part[1]+"' at line "+part[0]+" not found.");
             // check if more than one 'end' command is found: only one allowed
-            if(part[1].matches("\\b(end)\\b") && endCounter < 1)
+            if(part[1].matches("(?i)\\b(end)\\b") && endCounter < 1)
                 endCounter++;
-            else if (part[1].matches("\\b(end)\\b"))
+            else if (part[1].matches("(?i)\\b(end)\\b"))
                 throw new Exception("Command \'end\' only once allowed.");
 	    // run when command let is found
-            if(part[1].matches("\\b(let)\\b"))
+            if(part[1].matches("(?i)\\b(let)\\b"))
+	    {
+		String line = simpleLine.replaceAll("(?i)^[0-9]+\\slet\\s", "");
+		
 		// check if operators are allowed
-                if(checkOperator(simpleLine.replaceFirst("^[0-9]+\\slet\\s", "")))
+                if(checkOperator(line))
                     throw new ArithmeticException("Operator at line "+part[0]+" not allowed.");
                 // check for correct arithmetic order
-                else if(checkArithmeticOrder(simpleLine.replaceFirst("^[0-9]+\\slet\\s", "")))
+                if(checkArithmeticOrder(line))
+//		    if(checkArrayDeclaration(line))
                     throw new ArithmeticException("Wrong arithmetic syntax.");
+	    }
+	    // check branching command
+	    if(part[1].matches("(?i)\\b(goto|gosub)\\b"))
+	    {
+		if(part[1].matches("(?i)\\b(gosub)\\b"))
+		    gosubCounter++;
+		if(checkBranching(simpleLine.replaceFirst("(?i)^[0-9]+\\s(goto|gosub)\\s", "")))
+		    throw new IllegalArgumentException("Must be a line number.");
+	    }
+	    // return counter
+	    if(part[1].matches("(?i)\\b(return)\\b"))
+		returnCounter++;
+            // for loop
+            if(part[1].matches("(?i)\\b(for)\\b"))
+                if(checkForLoop(simpleLine.replaceFirst("(?i)^[0-9]+\\s","")))
+                    throw new Exception("Wrong syntax at line " + part[0] + ".");
 	    // validate input, can only be followed by one character variable
-	    if(part[1].matches("\\b(input|print)\\b") && checkInput(simpleLine.replaceFirst("^[0-9]+\\s(input|print)\\s", "")))
+	    if(part[1].matches("(?i)\\b(input|print)\\b") && checkInput(simpleLine.replaceFirst("(?i)^[0-9]+\\s(input|print)\\s", "")))
 		throw new IllegalArgumentException("Variable at line "+part[0]+" should be one lowercase letter.");
 	    // validate if line syntax
-	    if(part[1].matches("\\b(if)\\b") && checkIf(simpleLine.replaceFirst("^[0-9]+\\sif\\s", "")))
+	    if(part[1].matches("(?i)\\b(if)\\b") && checkIf(simpleLine.replaceFirst("^[0-9]+\\sif\\s", "")))
 		throw new Exception("Wrong syntax at line "+part[0]);
         }
+	
+	if(returnCounter > gosubCounter)
+	    throw new Exception("\'return\' count and \'gosub\' count do not match.");
 	return true;
     }
     
@@ -89,7 +100,10 @@ public class SimpleErrorCheck<E> implements Queue<E>{
 	}
 	return filepath;
     }
-    
+    // chech if for loop has correct syntax
+    private boolean checkForLoop(String line){
+        return !line.matches("(?i)^(for\\s[a-z]\\s=\\s[0-9]+\\sto\\s[0-9]+)(\\sstep\\s[0-9]+)?$");
+    }
     // check for correct arithmetic order
     private boolean checkArithmeticOrder(String line){
         // rules
@@ -97,141 +111,37 @@ public class SimpleErrorCheck<E> implements Queue<E>{
         // next to variable or digit, in between one whitespace e.g. y = i * (a - 3)
         // first charcter is a variable to be set, followed by symbol equals
         // followed by variable with one character or digit till end of the line
-        return !line.matches("(^[a-z]{1})$|(^[a-z]{1})(\\s=)(\\s([(]?([0-9]+|[a-z])[)]?|[+\\-\\/*]))+$");
+	// 
+        return !line.matches("(?i)^(([a-z])|([a-z])\\s=\\s(\\()?([a-z]|[0-9]+)((\\s[\\-+*%\\/]\\s(\\(|\\))?([a-z]|[0-9]+)(\\(|\\))?)+)?)$");
     }
     
-    // check if everything except remarks (rem) is in lowercase
-    private boolean checkLowerCase(String line){
-        return line.matches("^(.*[A-Z].*$)");
-    }
+//    private boolean checkArrayDeclaration(String line){
+//	return !line.matches("(?i)^([a-z])\\s[=]\\s([{][0-9]+([,]\\s[0-9]+)+[}])$");
+//    }
     
+    private boolean checkBranching(String line){
+	return !line.matches("(?i)^([0-9]+){1}$");
+    }
     // check if operator is valid
     private boolean checkOperator(String line){
-	// operators allowed: +, -, * and /
-        return line.replaceAll("([\\w\\d\\s=()])", "").matches("(.*[^+\\-*\\/].*)");
+	line = line.replaceAll("([\\w\\d\\s=()])", "");
+	boolean result = (line.length() == 0) ? true : line.matches("(.*[+\\-*\\/%^])");
+	// operators allowed: +, -, *, /, %, ^
+        return !result;
     }
     
     // check if command is valid
     private boolean checkCommand(String line){
-        return !line.matches("\\b(rem|input|let|fill|end|print|goto|if)\\b");
+        return !line.matches("\\b(?i)(rem|input|let|fill|end|print|goto|if|gosub|return|for|next)\\b");
     }
     
     // check for correct input variable
     private boolean  checkInput(String line){
-	return !line.matches("^[a-z]{1}$");
+	return !line.matches("^(?i)([a-z])((,\\s[a-z])+)?");
     }
     
     // check for syntax errors
     private boolean checkIf(String line){
-	return !line.matches("^([a-z]|[-?0-9]+)\\s(==|<=|>=|>|<|=)\\s([a-z]|[-?0-9]+)\\s\\bgoto\\b\\s[0-9]+$");
+	return !line.matches("^(?i)([a-z]|[-?0-9]+)\\s(==|<=|>=|>|<|=)\\s([a-z]|[-?0-9]+)\\s\\bgoto\\b\\s[0-9]+$");
     }
-    
-    @Override
-    public boolean add(E e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-
-    @Override
-    public boolean offer(E e) {
-        if(isEmpty())
-            firstInstruction = lastInstruction = new InstructionNode<>(e,null,null);
-        else
-            lastInstruction = lastInstruction.nextInstruction = new InstructionNode<>(e,lastInstruction,null);
-        
-        size++;
-        return true;
-    }
-
-    @Override
-    public int size() {
-       return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        if(firstInstruction == null)
-            return true;
-        return false;
-    }
-
-    @Override
-    public E remove() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public E poll() {
-        E item = peek();
-        
-        if(isEmpty())
-            return null;
-        else
-        {
-            firstInstruction = firstInstruction.nextInstruction;
-        }
-        size--;
-        return item;
-    }
-
-    @Override
-    public E element() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public E peek() {
-        return firstInstruction.data;
-    }
-
-    @Override
-    public boolean contains(Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Iterator<E> iterator() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Object[] toArray() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public <T> T[] toArray(T[] a) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean remove(Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean containsAll(Collection<?> c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean addAll(Collection<? extends E> c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean removeAll(Collection<?> c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean retainAll(Collection<?> c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void clear() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
 }

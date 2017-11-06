@@ -1,14 +1,20 @@
 10 rem  determine and print the sum of two integers
-15 rem
-20 rem  input the two integers
-30 input a
-40 input b
+11 rem
+15 rem  input the two integers
+20 input a, b
+25 rem
+30 rem  add integers and store result in c
+33 rem
+35 rem go to line 70 make calculations and return
+36 gosub 70
+37 rem if
+38 if a <= 3 goto 10
 45 rem
-50 rem  add integers and store result in c
-60 let c = a + b
-63 if a <= 3 goto 10
-65 rem
-70 rem  print the result
-80 print c
-90 rem  terminate program execution
-99 end
+50 rem print result
+55 print c
+60 rem  terminate program execution
+65 end
+69 rem calculation method/object
+70 Let c = a + b
+75 return
+

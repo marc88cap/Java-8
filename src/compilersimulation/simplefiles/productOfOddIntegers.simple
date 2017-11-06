@@ -1,0 +1,13 @@
+10 rem Calculate the product of odd integers
+12 rem
+13 rem define c to 0
+15 let c = 1
+17 rem
+18 rem loop while until a reaches 9
+20 for a = 1 to 9 step 2
+25 let c = c * a
+30 next
+40 rem
+43 rem print result to screen
+50 print c
+99 end

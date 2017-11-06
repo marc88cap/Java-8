@@ -19,7 +19,6 @@ public class Branch extends TransferOfControl{
 
     @Override
     public void executeInstruction(){
-	System.out.println("branching"+ operand);
         instructionCounter = operand;
     }
 }

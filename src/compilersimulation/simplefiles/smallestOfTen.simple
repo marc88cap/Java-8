@@ -1,12 +1,13 @@
-10 rem  Input ten integers and print the smallest
-13 let s = 0
-15 let c = 0
-17 let g = 10
+10 rem Input ten integers and print the smallest
+13 let s
+15 let c
+17 let g
 20 input n
-25 if c == 0 goto 55
-30 if s > n goto 55
-40 if c == g goto 99
-45 let c = c + 1
-50 goto 20
-55 let s = n
+25 if c == 0 goto 35
+30 if s < n goto 40
+35 let s = n
+40 if c == 10 goto 50
+44 let c = c + 1
+45 goto 20
+50 print s
 99 end

@@ -21,11 +21,12 @@ public class Divide extends Arithmetic{
     
     @Override
     public void executeInstruction() throws Exception{
-        if(errorInput((int)(accumulator / super.memory.fetchAtIndex(operand))))
-	    throw new OverflowException();
         if(memory.fetchAtIndex(operand) == 0)
 	    throw new DivisionByZeroException();
+	double result = accumulator / super.memory.fetchAtIndex(operand);
+        if(checkInputError((int)result))
+	    throw new OverflowException();
 	
-	accumulator /= super.memory.fetchAtIndex(operand);
+	accumulator = result;
     }
 }
