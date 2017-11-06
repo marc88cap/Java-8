@@ -30,6 +30,7 @@ public class Compiler {
     private int backLocation = 99; // in memory array back location counter
     private int instructionCounter = 0; // counter of instructions
     private String filePathSML; // sml file path to write in
+    private int forFromLocation, forToLocation, forStepLocation;
     
     public EntryTable[] compile(String filePath) throws IOException{
 	this.filePathSML = "src/compilersimulation/simpletronhardware/SML/"
@@ -45,7 +46,8 @@ public class Compiler {
     private void firstPass(String filePath) throws FileNotFoundException, IOException{
 	StreamTokenizer st = new StreamTokenizer(new FileReader(filePath));
 	InfixToPostfixConverter itpc = new InfixToPostfixConverter();
-	
+	int forLoopLine = 0;
+	boolean gosub = false;
 	st.eolIsSignificant(true); // treat end-of-lines as tokens
 	st.ordinaryChar('/'); // set slash (/) as ordinary character
 	st.lowerCaseMode(true); // everything is lowercase
@@ -64,7 +66,7 @@ public class Compiler {
 		    break;
 		// push line number into symbolTable
 		case StreamTokenizer.TT_NUMBER:
-			pushEntry((int)st.nval,'L');
+			insertIntoSymbolTable((int)st.nval,'L');
 		    break;
 		// if its a word 
 		case StreamTokenizer.TT_WORD:
@@ -81,7 +83,7 @@ public class Compiler {
 				symbol = (int)st.sval.charAt(0);
 				insertIntoSML(1000 + backLocation);
 
-				pushEntry(symbol,'V');
+				insertIntoSymbolTable(symbol,'V');
 				}
 			    }
 			    break;
@@ -114,7 +116,7 @@ public class Compiler {
 			    // store the variabl into v
 			    char v = st.sval.charAt(0);
 			    // push variable into the symbolTable
-			    pushEntry((int)v, 'V');
+			    insertIntoSymbolTable((int)v, 'V');
 			    // get the memory location of the variable from the symbolTable
 			    location = getMemoryLocation((int)st.sval.charAt(0), 'V'); // temporary store final location
 			    // if next token is not end-of-line continue reading
@@ -130,7 +132,7 @@ public class Compiler {
 //				    int num = (int)st.nval;
 //				    
 //				    for(int i=0;i<num;i++)
-//					pushEntry((int)v, 'V', true);
+//					insertIntoSymbolTable((int)v, 'V', true);
 //				    
 //				    while(st.nextToken() != StreamTokenizer.TT_EOL);
 //				    break;
@@ -145,7 +147,7 @@ public class Compiler {
 				    switch(st.ttype)
 				    {
 					case StreamTokenizer.TT_NUMBER:
-					    pushEntry((int)st.nval, 'C');
+					    insertIntoSymbolTable((int)st.nval, 'C');
 					    sb.append(getMemoryLocation((int)st.nval, 'C'));
 					    break;
 					case StreamTokenizer.TT_WORD:
@@ -197,7 +199,7 @@ public class Compiler {
 				// comparison operands is stored to the stringbuffer
 				switch(st.ttype){
 				    case StreamTokenizer.TT_NUMBER:
-					pushEntry((int)st.nval,'C');
+					insertIntoSymbolTable((int)st.nval,'C');
 					first = outputComparisonOperaterCodes(first, getMemoryLocation((int)st.nval, 'C'));
 					break;
 				    case StreamTokenizer.TT_WORD:
@@ -223,11 +225,64 @@ public class Compiler {
 			    // store the line to the lineFlags array
 			    lineFlags[instructionCounter] = symbol;
 			    // insert empty command to SML array
-			    insertIntoSML(4400);
+			    insertIntoSML(4900);
+			    gosub = true;
 			    break;
 			case "return":
 			    // to indicate the end of method push empty command to array
-			    insertIntoSML(4500);
+			    insertIntoSML(4900);
+			    break;
+			case "for":
+			    // syntax:
+			    // for x = 2 to 10 step 2
+			    // move to next token: variable
+			    st.nextToken();
+			    // store variable
+			    insertIntoSymbolTable((int)st.sval.charAt(0), 'V');
+			    forFromLocation = getMemoryLocation((int)st.sval.charAt(0), 'V');
+			    st.nextToken(); // equals symbol
+			    st.nextToken(); // constant expected
+			    insertIntoSymbolTable((int)st.nval, 'C');
+			    int constantLocation = getMemoryLocation((int)st.nval, 'C');
+			    insertIntoSML(2000+constantLocation);
+			    insertIntoSML(2100+forFromLocation);
+			    forLoopLine = instructionCounter;
+			    st.nextToken(); // to command
+			    st.nextToken(); // constant expected
+			    insertIntoSymbolTable((int)st.nval, 'C');
+			    forToLocation = getMemoryLocation((int)st.nval, 'C');
+			    // if command step is found
+			    int stepNumber;
+			    if(st.nextToken() != StreamTokenizer.TT_EOL)
+			    {
+				st.nextToken(); // constant expected
+				stepNumber = (int)st.nval;
+			    }
+			    // if step is not found
+			    else
+			    {
+				stepNumber = 1;
+			    }
+			    insertIntoSymbolTable(stepNumber, 'C');
+			    forStepLocation = getMemoryLocation(stepNumber, 'C');
+				
+			    break;
+			case "next":
+			    insertIntoSML(2000+forFromLocation);
+			    insertIntoSML(3000+forStepLocation);
+			    insertIntoSML(2100+forFromLocation);
+			    insertIntoSML(3100+forToLocation);
+			    if(gosub)
+			    {
+				insertIntoSML(-4100-forLoopLine);
+				insertIntoSML(-4200-forLoopLine);
+			    }
+			    else 
+			    {
+				insertIntoSML(4100+forLoopLine);
+				insertIntoSML(4200+forLoopLine);
+			    }
+			    
 			    break;
 			case "goto":
 			    // after goto command a line number is expected
@@ -252,7 +307,7 @@ public class Compiler {
 			    
 			case "end":
 			    // insert directly
-			    insertIntoSML(4300);
+			    insertIntoSML(9900);
 			    break;
 			default:
 			    // do nothing
@@ -284,9 +339,9 @@ public class Compiler {
 		if(location == -1){
 		    throw new IllegalArgumentException("Line "+lineFlags[f]+" is missing.");
 		}
-		// the location was found and it holds an imcomplete instruction
+		// the location was found and it holds an incomplete instruction
 		// for gosub/method
-		if(SML[f] == 4400)
+		if(SML[f] == 4900)
 		{
 		    // is used to move to the next field
 		    int i = 0;
@@ -295,7 +350,7 @@ public class Compiler {
 		    // every line until a return command is stored to goSub array
 		    // and goSubCount and i are incremented on each input
 		    // goSubCount 
-		    while(SML[location+i] / 100 != 45)
+		    while(SML[location+i] / 100 != 49)
 		    {
 			goSub[goSubCount++] = SML[location+i];
 			i++;
@@ -304,7 +359,7 @@ public class Compiler {
 		}
 		// if its everything else but a gosub command complete the comand directly
 		else
-		    SML[f] = SML[f]+location;
+			SML[f] = SML[f] + location;
 		
 		    
 	    }
@@ -322,36 +377,53 @@ public class Compiler {
 	} // end of instruction completitions except for goSub instructions
 	// use the disk object to open a file
 	disk.openFile(this.filePathSML);
+	
+	
 	// for each sml instruction in the SML array
-	for (int sml : SML) {
+	for (int l=0;l<SML.length;l++) {
+	    int sml = SML[l];
+	    
 	    // check if its a goSub instruction
-	    if(sml / 100 == 44)
+	    if(sml / 100 == 49)
 	    {
-		// used to move to the next field
+		// goSub instruction counter; needed at fixing location
 		int i = 0;
 		// get the starting field number for goSub array
 		int num = sml % 100;
 		// while goSub field value is valid
 		// and goSub field value doesnt contain the return instruction
-		while(goSub[num+i] > 0 && goSub[num+i] != 4500)
+		while(goSub[num+i] > 0 && goSub[num+i] != 4900)
 		{
 		    // insert the instruction into the file
 		    disk.printToFile((goSub[num+i] > 0) ? "+"+goSub[num+i] : String.valueOf(goSub[num+i]));
 		    i++; // increment to next field
 		}
 		
+		// fix symbol table location attribute
+		for(int st=0;st<symbolTable.length;st++)
+		{
+		    if(symbolTable[st] == null) break;
+		    // only check for line numbers and locations that are bigger as sml line numbers
+		    // in other words: locations that come after the go sub instruction
+		    if(symbolTable[st].type == 'L' && symbolTable[st].location > l)
+		    {
+			symbolTable[st].location += i-1; // store new locations
+		    }
+		}
+		// correct the location in SML array
+		fixSMLBranchingLocations(l+1, i-1);
 	    }
 	    // for every other instruction, insert directly
 	    else
 		disk.printToFile((sml > 0) ? "+"+sml : String.valueOf(sml));
 	    // when the HALT instruction is found. insertion is completed
-	    if(sml == 4300) break;
+	    if(sml == 9900) break;
 	}
 	// close the file
 	disk.closeFile();
     }
     // print the symbolTable contents to the screen
-    public void print(){
+    public void printSymbolTable(){
 	for(EntryTable et : symbolTable){
 	    if(et == null)
 		return;
@@ -361,7 +433,17 @@ public class Compiler {
     }
     // check if its a command
     private boolean isCommand(String command){
-	return command.equals("input") || command.equals("print") || command.equals("goto") || command.equals("end") || command.equals("let") || command.equals("if");
+	return command.equals("input") 
+		|| command.equals("print") 
+		|| command.equals("goto") 
+		|| command.equals("end") 
+		|| command.equals("let") 
+		|| command.equals("gosub") 
+		|| command.equals("for") 
+		|| command.equals("to") 
+		|| command.equals("step") 
+		|| command.equals("return") 
+		|| command.equals("if");
     }
     // get a memory location from the symbolTable
     private int getMemoryLocation(int symbol, char type){
@@ -374,7 +456,7 @@ public class Compiler {
 	return -1;
     }
     // insert a new EntryTable object into the symbolTable array
-    private void pushEntry(int symbol, char type){
+    private void insertIntoSymbolTable(int symbol, char type){
 	// search the table if the value already exists
 	int searchLocation = getMemoryLocation(symbol, type);
 	// if it does not create new entry
@@ -439,7 +521,7 @@ public class Compiler {
 		|| operator == '*' || operator == '%' || operator == '^';
     }
     // return operator codes
-    private int operatorCode(String operator){
+    private int getOperatorCode(String operator){
 	switch(operator){
 	    case "+":
 		return 3000;
@@ -461,7 +543,7 @@ public class Compiler {
     private void convertExpressionToSML(StringBuffer postfix, int resultLocation){
 	StackCustom<Integer> stack = new StackCustom<>();
 	// get a temporary location which is a next location from backLocation
-	int tempLocation = backLocation--;
+	int tempLocation = backLocation;
 	// break the postfix into parts
 	String[] tp = postfix.toString().split("\\s");
 	// for each part
@@ -477,7 +559,7 @@ public class Compiler {
 		int y = stack.pop();
 		int x = stack.pop();
 		// get the operator code
-		int oCode = operatorCode(token);
+		int oCode = getOperatorCode(token);
 		// if the first location is not already loaded
 		if(!isRedundantInstruction(x))
 		    insertIntoSML(2000 + x); // insert a load integer instruction
@@ -499,7 +581,21 @@ public class Compiler {
 	return this.filePathSML;
     }
     // check if the memoryLocation is already loaded into the accumulator 
-    public boolean isRedundantInstruction(int memoryLocation){
+    private boolean isRedundantInstruction(int memoryLocation){
 	return !(memoryLocation != (SML[instructionCounter-1] % 100) ||  (SML[instructionCounter-1] - memoryLocation) == 1000);
+    }
+    // fixes location after inserting the gosub method into SML array
+    public void fixSMLBranchingLocations(int startingLine, int num){
+	boolean gosub = false;
+	for(int s=startingLine; s<SML.length && SML[s] != 0;s++){
+	    if(SML[s] / 100 == 49) gosub = true;
+	    if(SML[s] / 1000 == -4)
+	    {
+		if(gosub)
+		    SML[s] = SML[s] - num;
+		else
+		    SML[s] = Math.abs(SML[s] - num);
+	    }
+	}
     }
 }
