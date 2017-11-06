@@ -8,24 +8,14 @@ package compilersimulation.errorcheck;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Queue;
 import java.util.Scanner;
 /**
  *
  * @author markoc
  */
-public class SimpleErrorCheck<E> implements Queue<E>{
-    private InstructionNode<E> firstInstruction;
-    private InstructionNode<E> lastInstruction;
-    private int size;
+public class SimpleErrorCheck{
     private Path filePath;
     private Scanner fileSimpleCode;
-    
-    public SimpleErrorCheck(){
-        firstInstruction = lastInstruction = null;
-    }
     
     // method checks if the loaded program is written as expected
     public boolean checkErrors() throws Exception{
@@ -75,6 +65,10 @@ public class SimpleErrorCheck<E> implements Queue<E>{
 	    // return counter
 	    if(part[1].matches("(?i)\\b(return)\\b"))
 		returnCounter++;
+            // for loop
+            if(part[1].matches("(?i)\\b(for)\\b"))
+                if(checkForLoop(simpleLine.replaceFirst("(?i)^[0-9]+\\s","")))
+                    throw new Exception("Wrong syntax at line " + part[0] + ".");
 	    // validate input, can only be followed by one character variable
 	    if(part[1].matches("(?i)\\b(input|print)\\b") && checkInput(simpleLine.replaceFirst("(?i)^[0-9]+\\s(input|print)\\s", "")))
 		throw new IllegalArgumentException("Variable at line "+part[0]+" should be one lowercase letter.");
@@ -83,7 +77,7 @@ public class SimpleErrorCheck<E> implements Queue<E>{
 		throw new Exception("Wrong syntax at line "+part[0]);
         }
 	
-	if(returnCounter != gosubCounter)
+	if(returnCounter > gosubCounter)
 	    throw new Exception("\'return\' count and \'gosub\' count do not match.");
 	return true;
     }
@@ -106,7 +100,10 @@ public class SimpleErrorCheck<E> implements Queue<E>{
 	}
 	return filepath;
     }
-    
+    // chech if for loop has correct syntax
+    private boolean checkForLoop(String line){
+        return !line.matches("(?i)^(for\\s[a-z]\\s=\\s[0-9]+\\sto\\s[0-9]+)(\\sstep\\s[0-9]+)?$");
+    }
     // check for correct arithmetic order
     private boolean checkArithmeticOrder(String line){
         // rules
@@ -115,7 +112,7 @@ public class SimpleErrorCheck<E> implements Queue<E>{
         // first charcter is a variable to be set, followed by symbol equals
         // followed by variable with one character or digit till end of the line
 	// 
-        return !line.matches("(?i)((^[a-z]{1})$|(^[a-z]{1})(\\s[=]\\s(([(]?[a-z])((\\s[+\\-\\/*]\\s[(]?[a-z][)]?)?)+))?)$|(^[a-z][\\[][0-9][\\]])$");
+        return !line.matches("(?i)^(([a-z])|([a-z])\\s=\\s(\\()?([a-z]|[0-9]+)((\\s[\\-+*%\\/]\\s(\\(|\\))?([a-z]|[0-9]+)(\\(|\\))?)+)?)$");
     }
     
 //    private boolean checkArrayDeclaration(String line){
@@ -135,125 +132,16 @@ public class SimpleErrorCheck<E> implements Queue<E>{
     
     // check if command is valid
     private boolean checkCommand(String line){
-        return !line.matches("\\b(?i)(rem|input|let|fill|end|print|goto|if|gosub|return)\\b");
+        return !line.matches("\\b(?i)(rem|input|let|fill|end|print|goto|if|gosub|return|for|next)\\b");
     }
     
     // check for correct input variable
     private boolean  checkInput(String line){
-	return !line.matches("^(?i)([a-z])([,][\\s][a-z])+");
+	return !line.matches("^(?i)([a-z])((,\\s[a-z])+)?");
     }
     
     // check for syntax errors
     private boolean checkIf(String line){
 	return !line.matches("^(?i)([a-z]|[-?0-9]+)\\s(==|<=|>=|>|<|=)\\s([a-z]|[-?0-9]+)\\s\\bgoto\\b\\s[0-9]+$");
     }
-    
-    @Override
-    public boolean add(E e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-
-    @Override
-    public boolean offer(E e) {
-        if(isEmpty())
-            firstInstruction = lastInstruction = new InstructionNode<>(e,null,null);
-        else
-            lastInstruction = lastInstruction.nextInstruction = new InstructionNode<>(e,lastInstruction,null);
-        
-        size++;
-        return true;
-    }
-
-    @Override
-    public int size() {
-       return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        if(firstInstruction == null)
-            return true;
-        return false;
-    }
-
-    @Override
-    public E remove() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public E poll() {
-        E item = peek();
-        
-        if(isEmpty())
-            return null;
-        else
-        {
-            firstInstruction = firstInstruction.nextInstruction;
-        }
-        size--;
-        return item;
-    }
-
-    @Override
-    public E element() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public E peek() {
-        return firstInstruction.data;
-    }
-
-    @Override
-    public boolean contains(Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Iterator<E> iterator() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Object[] toArray() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public <T> T[] toArray(T[] a) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean remove(Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean containsAll(Collection<?> c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean addAll(Collection<? extends E> c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean removeAll(Collection<?> c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean retainAll(Collection<?> c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void clear() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
 }
