@@ -22,19 +22,6 @@ public class EntryTable {
 	this.location = loc;
     }
     
-    public void setSymbol(int symbol){
-	this.symbol = symbol;
-    }
-    
-    public void setType(char type){
-	if(checkType(type))
-	    this.type = type;
-    }
-    
-    public void setLocation(int loc){
-	this.location = loc;
-    }
-    
     public int getSymbol(){
 	return this.symbol;
     }
