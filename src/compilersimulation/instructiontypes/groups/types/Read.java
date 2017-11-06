@@ -6,7 +6,6 @@
 package compilersimulation.instructiontypes.groups.types;
 
 import compilersimulation.instructiontypes.groups.InputAndOutput;
-import compilersimulation.simpletronhardware.Memory;
 import java.util.Scanner;
 
 /**
@@ -26,12 +25,12 @@ public class Read extends InputAndOutput{
         do{
             System.out.printf("> ", "input");
             input = sc.nextInt();
-            if(errorInput(input)){
+            if(checkInputError(input)){
                 System.err.printf("%s%n","!!! Input should be between -9999 and 9999 inclusive !!!");
             }
             else{
                 super.memory.setAtIndex(operand, input);
             }
-        }while(errorInput(input));
+        }while(checkInputError(input));
     }
 }
