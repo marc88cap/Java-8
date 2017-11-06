@@ -1,5 +1,5 @@
 # [Simpletron](Simpletron.java)
-Is a simulation of a virtual machine which runs a **Compiler** to compile **Simple language** to **Simpletron Machine Language** which is then executed with help of hardware components which are written object-oriented using [polymorphism](https://en.wikipedia.org/wiki/Polymorphism_(computer_science)).
+Simulation of a virtual machine runs a **Compiler** to compile **Simple language** to **Simpletron Machine Language** which is then executed with help of virtual hardware components written object-oriented using [polymorphism](https://en.wikipedia.org/wiki/Polymorphism_(computer_science)).
 
 Simple language files `.simple` are located in the folder `simplefiles` and Simpletron Machine Language files `.sml` are located in the folder `simpletronhardware/SML` together with `.dump` files.
 
