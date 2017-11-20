@@ -1,112 +1,154 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package bouncingball;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.security.SecureRandom;
+import javax.swing.JPanel;
 
-/**
- *
- * @author markoc
- */
-public class Ball extends Playground{
+public class Ball{
     SecureRandom sr = new SecureRandom();
-    Color color;
-    private int dirX = (sr.nextBoolean()) ? sr.nextInt(2)+3 : ((sr.nextInt(2)+3) *(-1)), dirY = sr.nextInt(3)+1;
-    private int R = sr.nextInt(255), G = sr.nextInt(255), B = sr.nextInt(255);
-    private int x, y, w, h, oh, ow, centerX, centerY;
-    private int shadowHeight = 10, shadowHeightDynamic = shadowHeight;
-    private double shadowRate = 0;
-    // constructor with no arguments sets coordinates to 0, color to black
-    // and fill to false
+    private int dirX;
+    private int dirY;
+    private double ballX, ballY, ballW, ballH, dyBallW, dyBallH;
+    private double shadowH = 10, dyShadowW, dyShadowH = shadowH, shadowRate = 1.0;
+    private double gridHeight = 0, gridWidth = 0;
+    private Color ballColor;
    
     // constructor with input values
-    public Ball(int x, int y, int w, int h, int panelHeight, int panelWidth)
+    public Ball(int x, int y, JPanel grid)
     {
-	super.setWidth(panelWidth-(this.shadowHeight/2));
-	super.setHeight(panelHeight-(this.shadowHeight/2));
-	this.x = x;
-	this.y = y;
-	this.ow = this.w = w;
-	this.oh = this.h = h;
-	this.h = this.getNewHeight();
-	this.w = this.getNewWidth();
-	this.centerX = this.x + this.w/2;
-	this.centerY = this.y + this.h/2;
-	this.color = new Color(this.R , this.G, this.B);
-	this.shadowRate = (double)(((double)((this.y+this.h) - (double)(super.getPlaygroundHeight()*0.3)))/((double)(super.getPlaygroundHeight() - (double)(super.getPlaygroundHeight()*0.3))));
-    } 
-    
-    public void moveBall() {
-	this.x += this.dirX;
-	this.y += this.dirY;
-	this.centerX = this.x + this.w/2;
-	this.centerY = this.y + this.h/2;
-        this.h = this.getNewHeight();
-	this.w = this.getNewWidth();
-	this.shadowRate = calculateShadowRate();
-	calculateShadowDynamicHeight();
+	this.gridWidth = grid.getWidth();
+	this.gridHeight = grid.getHeight()-(int)(this.shadowH);
+	this.dirX = (sr.nextBoolean()) ? sr.nextInt(3)+1 : ((sr.nextInt(3)+1) *(-1));
+	this.dirY = sr.nextInt(3)+1;
+	this.ballX = x;
+	this.ballY = y;
+	this.ballW = sr.nextInt(20)+100;
+	this.ballH = sr.nextInt(20)+100;
 	tryToBounce();
+	calculateAttributes();
+    } 
+    // calculate new ball data
+    public void calculateAttributes()
+    {
+	this.dyBallH = this.getNewHeight();
+	this.dyBallW = this.getNewWidth();
+	this.ballColor = new Color(sr.nextInt(255) , sr.nextInt(255), sr.nextInt(255));
+	this.shadowRate = calculateShadowRate();
     }
     
-    public void paint(Graphics g)
-    {
-	int shadowAlpha = (int)(this.shadowRate*255);
-	this.moveBall();
-	g.setColor(new Color(0,0,0, shadowAlpha));
-	int shadowWidth = (int)(this.w*this.shadowRate);
-	g.fillOval(this.x+((this.w-shadowWidth)/2), super.getPlaygroundHeight()-(this.shadowHeightDynamic/2), shadowWidth, this.shadowHeightDynamic);
-	g.setColor(this.color);
-	g.fillOval(this.x, this.y, this.w, this.h);
-    } 
+    public void moveBall() {
+	tryToBounce();
+	this.ballX += this.dirX;
+	this.ballY += this.dirY;
+        this.dyBallH = this.getNewHeight();
+	this.dyBallW = this.getNewWidth();
+	this.shadowRate = calculateShadowRate();
+	calculateDynamicShadowHeight();
+	calculateDynamicShadowWidth();
+    }
     
     private void tryToBounce()
     {
 	// when edge is reached bounce back
-	if(this.x <= 0 && this.dirX < 0 || this.x+this.w >= super.getPlaygroundWidth() && this.dirX > 0) 
+	if(this.ballX <= 0 && this.dirX < 0 || this.ballX+this.dyBallW >= this.gridWidth && this.dirX > 0) 
 	    this.dirX *= -1; // go to opposite direction
 	// next lines are used only when the ball is growing; to pervent the ball from going off edge
-	else if (this.x <= 0 && this.dirX > 0) // if its passing the left edge
-	    this.x = 0;
-	else if (this.x+this.w >= super.getPlaygroundWidth() && this.dirX < 0) // if its passing the right edge
-	    this.x = super.getPlaygroundWidth()-this.w;
+	if (this.ballX <= 0) // if its passing the left edge
+	    this.ballX = 0;
+	if (this.ballX+this.dyBallW >= this.gridWidth) // if its passing the right edge
+	    this.ballX = this.gridWidth-this.dyBallW;
 	
 	// when edge is reached bounce back
-	if(this.y <= 0 && this.dirY < 0 || this.y+this.h >= super.getPlaygroundHeight() && this.dirY > 0) 
+	if(this.ballY <= 0 && this.dirY < 0 || this.ballY+this.dyBallH >= this.gridHeight && this.dirY > 0) 
 	    this.dirY *= -1; // go to opposite direction
-	else if(this.y+this.h >= super.getPlaygroundHeight() && this.dirY > 0)
-	    this.y = super.getPlaygroundHeight()-this.h;
+	// when top edge is met
+	if(this.ballY <= 0)
+	    this.ballY = 0;
+	// when bottom edge is met
+	if((this.ballY+this.dyBallH) >= this.gridHeight)
+	    this.ballY = this.gridHeight-this.dyBallH; 
 	
 	
     }
-    
+    // calculate new height for the ball, based on current Y location
     private int getNewHeight()
     {
-	return (this.centerY > 10 && super.getPlaygroundHeight() > 0) ? (int)(((double)this.y+(double)this.h)/(double)(super.getPlaygroundHeight()-this.shadowHeight)*this.oh) : this.h;
+	return (int)((this.ballY)/(this.gridHeight-this.shadowH)*this.ballH);
     }
-    
+    // calculate new width for the ball, based on current Y location
     private int getNewWidth()
     {
-	return (this.centerY > 10 && super.getPlaygroundHeight() > 0) ? (int)(((double)this.y+(double)this.h)/(double)(super.getPlaygroundHeight()-this.shadowHeight)*this.ow) : this.w;
+	return(int)((this.ballY)/(this.gridHeight-this.shadowH)*this.ballW);
     }
-    
-    public int getShadowHeight()
+    // calculate new height for the shadow based on shadow rate number
+    private void calculateDynamicShadowHeight()
     {
-	return this.shadowHeight;
+	this.dyShadowH = (this.shadowRate > 0) ? (int)(this.shadowH * this.shadowRate) : 0;
     }
-    
-    private void calculateShadowDynamicHeight()
+    // calculate new width for the shadow based on shadow rate number
+    private void calculateDynamicShadowWidth()
     {
-	this.shadowHeightDynamic = (this.shadowRate > 0) ? (int)(this.shadowHeight * this.shadowRate) : 0;
+	this.dyShadowW = (this.shadowRate > 0) ? (int)(this.dyBallW * this.shadowRate) : 0;
     }
-    
+    // calculate new shadow rate based on current balls bottom location(Y loc + height)
+    // shadow is shown only when the ball is in the area of bottom 100 pixles 
+    // on Y axis
     private double calculateShadowRate()
     {
-	double result = (double)(((double)(this.y+this.h)-(double)(super.getPlaygroundHeight()-100))/100);
+	double result = (((this.ballY+this.dyBallH)-(this.gridHeight-100))/100);
 	return (result < 0) ? 0 : (result > 1) ? 1 : result;
+    }
+    
+    public double getShadowHeight()
+    {
+	return this.shadowH;
+    }
+    
+    public void setGridHeight(int height)
+    {
+	if(height > 0)
+	    this.gridHeight = height;
+	else
+	    throw new IllegalArgumentException("Height must be highter than 0");
+    }
+    
+    public void setGridWidth(int width)
+    {
+	if(width > 0)
+	    this.gridWidth = width;
+	else
+	    throw new IllegalArgumentException("Width must be higher than 0");
+    }
+
+    public int[] getBallData()
+    {
+	int[] fillBall= {
+	    (int)this.ballX,
+	    (int)this.ballY,
+	    (int)this.dyBallW,
+	    (int)this.dyBallH
+	};
+	return fillBall;
+    }
+    
+    public int[] getShadowData()
+    { 
+	int[] fillShadow= {
+	    (int)this.ballX+(((int)this.dyBallW-((int)(this.dyBallW*this.shadowRate)))/2),
+	    (int)(this.gridHeight-(int)(this.dyShadowH/2)),
+	    (int)this.dyShadowW,
+	    (int)this.dyShadowH
+	};
+	return fillShadow;
+    }
+    
+    public Color getBallColor()
+    {
+	return this.ballColor;
+    }
+    
+    public Color getShadowColor()
+    {
+	return new Color(0,0,0,(int)(this.shadowRate*255));
     }
 }

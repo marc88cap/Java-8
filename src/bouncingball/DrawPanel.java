@@ -16,7 +16,7 @@ import javax.swing.JPanel;
  */
 public class DrawPanel extends JPanel{
     int ballCounter = 0;
-    Ball[] balls = new Ball[30];
+    Ball[] balls = new Ball[20];
     Thread animation = new Thread(new Animation());
     /**
      * Creates new form DrawPanel
@@ -24,14 +24,17 @@ public class DrawPanel extends JPanel{
     public DrawPanel() {
 	initComponents();
 	this.setBackground(Color.WHITE);
-	animation.setDaemon(true);
+	animation.setDaemon(false);
+	animation.start();
     }
     
     public void addBall(int x, int y)
     {
-	SecureRandom sr = new SecureRandom();
+	if(this.ballCounter == this.balls.length)
+	    return;
 	
-	this.balls[this.ballCounter] = new Ball(x, y, sr.nextInt(30)+100, sr.nextInt(30)+100, this.getHeight(), this.getWidth());
+	SecureRandom sr = new SecureRandom();
+	this.balls[this.ballCounter] = new Ball(x, y, this);
 	this.ballCounter++;
     }
     
@@ -45,7 +48,15 @@ public class DrawPanel extends JPanel{
 		g.dispose();
 		break;
 	    }
-	    balls[i].paint(g);
+	    
+	    int[] data = balls[i].getShadowData();
+	    g.setColor(balls[i].getShadowColor());
+	    g.fillOval(data[0], data[1], data[2], data[3]);
+	    
+	    data = balls[i].getBallData();
+	    g.setColor(balls[i].getBallColor());
+	    g.fillOval(data[0], data[1], data[2], data[3]);
+	    balls[i].moveBall();
 	}
     } 
     /**
@@ -57,11 +68,6 @@ public class DrawPanel extends JPanel{
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        addContainerListener(new java.awt.event.ContainerAdapter() {
-            public void componentAdded(java.awt.event.ContainerEvent evt) {
-                formComponentAdded(evt);
-            }
-        });
         addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 formMousePressed(evt);
@@ -70,9 +76,6 @@ public class DrawPanel extends JPanel{
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 formComponentResized(evt);
-            }
-            public void componentShown(java.awt.event.ComponentEvent evt) {
-                formComponentShown(evt);
             }
         });
 
@@ -89,31 +92,20 @@ public class DrawPanel extends JPanel{
     }// </editor-fold>//GEN-END:initComponents
 
     private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
-	if(!animation.isAlive())
-	    animation.start();
-	
-	    addBall(evt.getX(), evt.getY());
+	addBall(evt.getX(), evt.getY());
     }//GEN-LAST:event_formMousePressed
-
-    private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
-	       
-    }//GEN-LAST:event_formComponentShown
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
         for(Ball ball : balls)
 	{
 	    if(ball == null)
 		break;
-	    ball.setPlaygroundHeight(this.getHeight()-(ball.getShadowHeight()/2));
-	    ball.setPlaygroundWidth(this.getWidth()-(ball.getShadowHeight()/2));
+	    ball.setGridHeight(this.getHeight()-(int)(ball.getShadowHeight()/2));
+	    ball.setGridWidth(this.getWidth());
 	}
     }//GEN-LAST:event_formComponentResized
 
-    private void formComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_formComponentAdded
-
-    }//GEN-LAST:event_formComponentAdded
-
-    class Animation implements Runnable
+    private class Animation implements Runnable
     {	
 	@Override
 	public void run() {		

@@ -29,8 +29,12 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="label1" pref="380" max="32767" attributes="0"/>
                   <Component id="drawPanel1" max="32767" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Component id="coordLabel" min="-2" pref="269" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="bcountLabel" max="32767" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -40,7 +44,10 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="label1" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="coordLabel" max="32767" attributes="0"/>
+                  <Component id="bcountLabel" max="32767" attributes="0"/>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="drawPanel1" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -51,7 +58,6 @@
   <SubComponents>
     <Container class="bouncingball.DrawPanel" name="drawPanel1">
       <Events>
-        <EventHandler event="componentAdded" listener="java.awt.event.ContainerListener" parameters="java.awt.event.ContainerEvent" handler="drawPanel1ComponentAdded"/>
         <EventHandler event="mouseMoved" listener="java.awt.event.MouseMotionListener" parameters="java.awt.event.MouseEvent" handler="drawPanel1MouseMoved"/>
         <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="drawPanel1MousePressed"/>
       </Events>
@@ -59,7 +65,7 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="384" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -69,9 +75,17 @@
         </DimensionLayout>
       </Layout>
     </Container>
-    <Component class="java.awt.Label" name="label1">
+    <Component class="java.awt.Label" name="coordLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="label1"/>
+        <Property name="text" type="java.lang.String" value="Coordinates"/>
+      </Properties>
+      <AccessibilityProperties>
+        <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="coordinates"/>
+      </AccessibilityProperties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="bcountLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Ball count"/>
       </Properties>
     </Component>
   </SubComponents>
